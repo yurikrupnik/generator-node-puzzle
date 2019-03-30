@@ -8,43 +8,24 @@ const {
 } = global;
 
 describe('assets generator', () => {
-    test('assets folder default', function () {
-        // expect(1).toBe(1)
+    test('assets generator default options', function () {
         return helpers.run(path.join(__dirname, '../index.js'))
-            .withOptions({
-                type: 'server',
-            })
-            .then(function () {
-                // assert.file('webpack.config.js');
+            .withOptions({})
+            .withPrompts({})
+            .then(() => {
+                assert.file('assets');
             });
     });
-    test('assets folder everride', function () {
-        expect(1).toBe(1)
-        //     return helpers.run(path.join(__dirname, '../index.js'))
-        //         .withOptions({
-        //             type: 'server',
-        //         })
-        //         .then(function () {
-        //             assert.file('webpack.config.js');
-        //         });
+    test('assets generator default options', function () {
+        return helpers.run(path.join(__dirname, '../index.js'))
+            .withOptions({
+                path: 'src/assets'
+            })
+            .then(function () {
+                assert.file('src/assets');
+                assert.file('src/assets/download.jpeg');
+                assert.file('src/assets/IF-pin1.png');
+                assert.file('src/assets/favicon.ico');
+            });
     });
-    // test('webpack client', function () {
-    //     return helpers.run(path.join(__dirname, '../index.js'))
-    //         .withOptions({
-    //             type: 'client',
-    //         })
-    //         .then(function() {
-    //             assert.file('webpack.config.js');
-    //         });
-    // });
-    // test('webpack fullstack', function () {
-    //     return helpers.run(path.join(__dirname, '../index.js'))
-    //         .withOptions({
-    //             type: 'fullstack',
-    //         })
-    //         .then(function() {
-    //             assert.file('webpack.config.server.js');
-    //             assert.file('webpack.config.client.js');
-    //         });
-    // });
 });

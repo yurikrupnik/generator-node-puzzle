@@ -12,7 +12,6 @@ var Generator = require('yeoman-generator/lib');
 module.exports = class AssetsGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
-        // console.log('opts', opts);
 
         this.option('path', {
             type: String,
@@ -20,17 +19,12 @@ module.exports = class AssetsGenerator extends Generator {
             desc: 'Destination path',
             default: 'assets'
         });
-        // console.log('this.options.copyDestinationPath', this.options.copyDestinationPath);
     }
 
     writing() {
-        // console.log('this.copyDestinationPath', this.options.path);
-        // console.log('process.pwd()', process.cwd());
-
-        this.fs.copy(
+        this.fs.copy( // todo test
             this.templatePath(),
             this.destinationPath(this.options.path),
         );
     }
-
 };

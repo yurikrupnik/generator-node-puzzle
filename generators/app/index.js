@@ -1,5 +1,6 @@
 const Generator = require('yeoman-generator/lib');
 const basename = require('path').basename;
+var mkdirp = require('mkdirp');
 
 module.exports = class App extends Generator {
     constructor(args, opts) {
@@ -20,7 +21,7 @@ module.exports = class App extends Generator {
             }
         ];
 
-        this.option('path', {
+        this.option('codeSrc', {
             type: String,
             required: false,
             desc: 'Project files root name',
@@ -49,18 +50,25 @@ module.exports = class App extends Generator {
     configuring() {
         const {type} = this.props;
         const {options} = this;
-        const {libPath, path} = options;
+        const {codeSrc} = options;
+        mkdirp(codeSrc, (error, s) => {
+            if (error) {
+                console.log('error', error);
+            } else {
+                console.log('s', s);
+            }
+        });
         // this.composeWith(require.resolve('generator-license'));
         // this.composeWith(require.resolve('../babel/app'));
         this.composeWith(require.resolve('../assets/app'), {
-            // path: `${libPath}/${path}`
+            path: `${codeSrc}/assets`
         });
 
         this.composeWith(require.resolve('../jest/app'), {
             // destination
         });
         // this.composeWith(require.resolve('../eslint/generators/app'));
-        // this.composeWith(require.resolve('../webpack/app'));
+        this.composeWith(require.resolve('../webpack/app'));
         if (type === 'fullstack') {
             // this.composeWith(require.resolve('../client/generators/app'), {
             //     // fullstack: true
