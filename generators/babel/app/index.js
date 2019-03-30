@@ -1,20 +1,12 @@
 const Generator = require('yeoman-generator/lib');
 
-module.exports = class Babel extends Generator {
+module.exports = class D extends Generator {
     constructor(args, opts) {
         super(args, opts);
     }
 
-    static packages(){
-        return [
-            '@babel/core',
-            '@babel/plugin-syntax-object-rest-spread',
-            '@babel/preset-env'
-        ];
-    }
-
     writing() {
-        const defaultBabel = {
+        const defaultBabelConfig = {
             'presets': [
                 ['@babel/preset-env', {
                     'targets': {
@@ -23,14 +15,20 @@ module.exports = class Babel extends Generator {
                 }]
             ],
             'plugins': [
-                '@babel/plugin-syntax-object-rest-spread'
+                '@babel/plugin-syntax-object-rest-spread',
+                "@babel/plugin-syntax-dynamic-import"
             ]
 
         };
-        this.fs.writeJSON(this.destinationPath('.babelrc'), defaultBabel);
+        this.fs.writeJSON(this.destinationPath('.babelrc'), defaultBabelConfig);
     }
 
     install() {
-        // this.npmInstall(Babel.packages(), { 'save-dev': true });
+        this.npmInstall([
+            '@babel/core',
+            '@babel/plugin-syntax-object-rest-spread',
+            "@babel/plugin-syntax-dynamic-import",
+            '@babel/preset-env'
+        ], { 'save-dev': true });
     }
 };

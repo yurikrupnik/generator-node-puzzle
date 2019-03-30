@@ -57,7 +57,7 @@ module.exports = class App extends Generator {
             }
         });
         // this.composeWith(require.resolve('generator-license'));
-        // this.composeWith(require.resolve('../babel/app'));
+        this.composeWith(require.resolve('../babel/app'));
         this.composeWith(require.resolve('../assets/app'), {
             path: `${codeSrc}/assets`
         });
@@ -65,21 +65,21 @@ module.exports = class App extends Generator {
         this.composeWith(require.resolve('../jest/app'), {
             // destination
         });
-        // this.composeWith(require.resolve('../eslint/generators/app'));
+        this.composeWith(require.resolve('../eslint/app'));
         this.composeWith(require.resolve('../webpack/app'));
 
         if (type === 'fullstack') {
             this.composeWith(require.resolve('../client/generators/app'), {
                 // fullstack: true
             });
-            // this.composeWith(require.resolve('../server/generators/app'), {
-            //     // fullstack: true
-            // });
+            this.composeWith(require.resolve('../server/generators/app'), {
+                // fullstack: true
+            });
         }
         if (type === 'client') {
             this.composeWith(require.resolve('../client/generators/app'));
         } else if (type === 'server') {
-            // this.composeWith(require.resolve('../server/generators/app'),);
+            this.composeWith(require.resolve('../server/generators/app'),);
         }
         this.config.set();
     }

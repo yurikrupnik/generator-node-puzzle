@@ -12,7 +12,14 @@ module.exports = class ServerGenerator extends Generator {
     }
 
     async prompting() {
-        this.props = await this.prompt(questions);
+        const answers = await this.prompt(questions);
+        if (answers.serverFramework === 'react') {
+            this.composeWith(require.resolve('../react'));
+        } else if (answers.serverFramework === 'vue') {
+            this.composeWith(require.resolve('../vue'));
+        } else if (answers.viewEngine === 'angular') {
+            this.composeWith(require.resolve('../angular'));
+        }
     }
 
     _handleServerDevDependencies() {
@@ -25,7 +32,7 @@ module.exports = class ServerGenerator extends Generator {
     }
 
     install() {
-        // this._handleServerDevDependencies();
+        this._handleServerDevDependencies();
     }
 
 };

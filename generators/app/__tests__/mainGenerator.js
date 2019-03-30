@@ -20,7 +20,7 @@ describe('App generator', () => {
         license: 'MIT', // (optional) Select a license, so no license pro
     };
 
-    test('fullstack', () => {
+    test('generate fullstack', () => {
         return helpers.run(path.join(__dirname, '../index.js'))
             .withPrompts(Object.assign({},
                 licenceMockPromp,
@@ -31,7 +31,7 @@ describe('App generator', () => {
                 assert.file('package.json');
             });
     });
-    test('server', () => {
+    test('generateserver', () => {
         return helpers.run(path.join(__dirname, '../index.js'))
             .withPrompts(Object.assign({},
                 licenceMockPromp,
@@ -42,7 +42,7 @@ describe('App generator', () => {
                 assert.file('package.json');
             });
     });
-    test('client', () => {
+    test('generate client', () => {
         return helpers.run(path.join(__dirname, '../index.js'))
             .withPrompts(Object.assign({},
                 licenceMockPromp,
