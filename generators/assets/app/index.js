@@ -22,7 +22,7 @@ module.exports = class AssetsGenerator extends Generator {
     }
 
     writing() {
-        this.fs.copy( // todo test
+        this.fs.copy(
             this.templatePath(),
             this.destinationPath(this.options.path),
         );

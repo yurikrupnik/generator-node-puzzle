@@ -45,6 +45,6 @@ module.exports = class Webpack extends Generator {
     }
 
     install() {
-        this._installDevPackages();
+        // this._installDevPackages();
     }
 };

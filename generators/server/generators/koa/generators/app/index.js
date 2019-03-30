@@ -2,37 +2,22 @@ const Generator = require('yeoman-generator/lib');
 const basename = require('path').basename;
 var mkdirp = require('mkdirp');
 
-module.exports = class App extends Generator {
+module.exports = class KoaGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
-        this.types = [
-            {
-                value: 'fullstack',
-                name: 'Fullstack'
-            },
-            {
-                value: 'client',
-                name: 'Client'
-            },
-            {
-                value: 'server',
-                name: 'Server'
-            }
-        ];
-
-        this.option('codeSrc', {
+        this.option('koa-router', {
             type: String,
             required: false,
-            desc: 'Project files root name',
-            default: 'src'
+            desc: 'Include koa-router',
+            default: ''
         });
 
-        this.option('type', {
-            type: String,
+        this.option('port', {
+            type: Number,
             required: false,
-            desc: 'Project type',
-            default: ''
+            desc: 'P',
+            default: 7000
         });
 
         this.option('name', {
@@ -67,7 +52,6 @@ module.exports = class App extends Generator {
         });
         // this.composeWith(require.resolve('../eslint/generators/app'));
         this.composeWith(require.resolve('../webpack/app'));
-
         if (type === 'fullstack') {
             this.composeWith(require.resolve('../client/generators/app'), {
                 // fullstack: true
