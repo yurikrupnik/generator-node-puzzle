@@ -25,6 +25,13 @@ module.exports = class ReactGenerator extends Generator {
             desc: 'Include sass files',
             default: false
         });
+
+        this.option('ssr', {
+            type: Boolean,
+            required: Boolean,
+            desc: 'Include server side rendering',
+            default: false
+        });
     }
 
     configuring() {
