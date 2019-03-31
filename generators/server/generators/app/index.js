@@ -13,12 +13,10 @@ module.exports = class ServerGenerator extends Generator {
 
     async prompting() {
         const answers = await this.prompt(questions);
-        if (answers.serverFramework === 'react') {
-            this.composeWith(require.resolve('../react'));
-        } else if (answers.serverFramework === 'vue') {
-            this.composeWith(require.resolve('../vue'));
-        } else if (answers.viewEngine === 'angular') {
-            this.composeWith(require.resolve('../angular'));
+        if (answers.serverFramework === 'koa') {
+            this.composeWith(require.resolve('../koa/generators/app'));
+        } else if (answers.serverFramework === 'esxpress') {
+            this.composeWith(require.resolve('../esxpress/generators/app'));
         }
     }
 
@@ -32,7 +30,7 @@ module.exports = class ServerGenerator extends Generator {
     }
 
     install() {
-        this._handleServerDevDependencies();
+        // this._handleServerDevDependencies();
     }
 
 };

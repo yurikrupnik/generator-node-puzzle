@@ -76,7 +76,8 @@ module.exports = class ClientGenerator extends Generator {
         const { sass } = props;
         if (props.viewEngine === 'react') {
             this.composeWith(require.resolve('../react/generators/app'), {
-                sass
+                sass,
+                // srr: true
             });
         } else if (props.viewEngine === 'vue') {
             this.composeWith(require.resolve('../vue/generators/app'), {

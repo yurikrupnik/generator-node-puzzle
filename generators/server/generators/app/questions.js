@@ -1,5 +1,11 @@
 const questions = [
     {
+        type: 'confirm',
+        name: 'ssr',
+        message: 'Would you like Server side rendering?',
+        store: true
+    },
+    {
         type: 'list',
         name: 'serverFramework',
         message: 'Choose out of server side libraries',
