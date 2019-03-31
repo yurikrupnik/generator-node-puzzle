@@ -5,6 +5,10 @@ node_js:
 
 script: echo "Running tests against $(node -v)..."
 
+cache:
+  directories:
+    - node_modules
+
 jobs:
   include:
     - stage: Produce Coverage
