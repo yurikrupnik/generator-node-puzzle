@@ -11,13 +11,6 @@ var path = require('path');
 module.exports = class ReactGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
-        // this.props.name = path.basename(process.cwd())
-        // this.option('type', {
-        //     type: String,
-        //     required: false,
-        //     desc: 'Project name to be included in the package.json',
-        //     default: path.basename(process.cwd())
-        // });
 
         this.option('css', {
             type: Boolean,
@@ -27,7 +20,7 @@ module.exports = class ReactGenerator extends Generator {
         });
 
         this.option('sass', {
-            type: String,
+            type: Boolean, // todo check that
             required: Boolean,
             desc: 'Include sass files',
             default: false
@@ -50,7 +43,7 @@ module.exports = class ReactGenerator extends Generator {
         );
     }
 
-    installPackages() {
+    _installPackages() {
         this.npmInstall([
             'react',
             'prop-types',
@@ -60,7 +53,7 @@ module.exports = class ReactGenerator extends Generator {
         ]);
     }
 
-    installDevPackages() {
+    _installDevPackages() {
         this.npmInstall([
             '@babel/preset-react',
             'eslint-plugin-jsx-a11y',
@@ -70,9 +63,8 @@ module.exports = class ReactGenerator extends Generator {
     }
 
     install() {
-
-        this.installPackages();
-        this.installDevPackages();
+        this._installPackages();
+        this._installDevPackages();
     }
 
     end() {

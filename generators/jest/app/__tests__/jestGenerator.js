@@ -8,12 +8,40 @@ const {
 } = global;
 
 describe('jest generator', () => {
-    test('jest something', function () { // todo describe this
+    test('jest with default options', function () {
         return helpers.run(path.join(__dirname, '../index'))
             .then(function() {
-                // assert.file('.eslintrc');
-                // assert.fileContent('.eslintrc', 'eslint:recommended');
-                // assert.fileContent('.eslintrc', '\'parser\': \'babel-eslint\'');
+                assert.fileContent('package.json', 'jest src/');
+                assert.fileContent('package.json', 'jest src/ --coverage');
+                assert.fileContent('package.json', 'jest src/ --watch');
+                assert.fileContent('package.json', 'jest e2e/');
+                assert.file('e2e');
+            });
+    });
+
+    test('jest with different paths', function () { // todo describe this
+        return helpers.run(path.join(__dirname, '../index'))
+            .withOptions({
+                path: 'lol',
+                e2ePath: 'mi'
+            })
+            .then(function() {
+                assert.fileContent('package.json', 'jest lol/');
+                assert.fileContent('package.json', 'jest lol/ --coverage');
+                assert.fileContent('package.json', 'jest lol/ --watch');
+                assert.fileContent('package.json', 'jest mi/');
+                assert.file('mi');
+                assert.noFile('e2e');
+            });
+    });
+
+    test('jest no e2e', function () { // todo describe this
+        return helpers.run(path.join(__dirname, '../index'))
+            .withOptions({
+                e2e: false,
+            })
+            .then(function() {
+                assert.noFileContent('package.json', 'test:e2e');
             });
     });
 });

@@ -13,24 +13,22 @@ module.exports = class Eslint extends Generator {
                 'comma-dangle': 0,
                 'no-underscore-dangle': 1
             },
-            'extends': ['eslint:recommended']
+            'extends': ['eslint:recommended', 'plugin:node/recommended']
         };
 
         this.fs.writeJSON(this.destinationPath('.eslintrc'), eslintDefault);
     }
 
-    _packages() {
-
-    }
-    install() {
+    _installDevPackages() {
         this.npmInstall([
             'babel-eslint',
             'eslint',
             'eslint-plugin-import',
+            'eslint-plugin-node'
         ], { 'save-dev': true });
     }
 
-    end() {
-        this.log(`You have finished building EslingGenerator`);
+    install() {
+        // this._installDevPackages();
     }
 };

@@ -16,7 +16,7 @@ describe('assets generator', () => {
                 assert.file('assets');
             });
     });
-    test('assets generator default options', function () {
+    test('assets generate with path option', function () {
         return helpers.run(path.join(__dirname, '../index.js'))
             .withOptions({
                 path: 'src/assets'

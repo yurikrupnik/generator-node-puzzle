@@ -1,0 +1,83 @@
+{
+  "name": "generator-node-puzzle",
+  "version": "0.0.0",
+  "description": "Yeoman generator for puzzling javascript projects, client side, server side and combined with many features",
+  "main": "generators/app/index.js",
+  "scripts": {
+    "lint:templates": "ejslint generators/app/templates**",
+    "lint:generator": "eslint generators/app/index.js",
+    "lint": "npm run lint:templates && npm run lint:generator",
+    "test": "jest generators",
+    "test:watch": "jest generators --watch",
+    "test:coverage": "jest generators --coverage",
+    "build": "webpack",
+    "clean": "rimraf dist/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yurikrupnik/generator-node-puzzle.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yurikrupnik/generator-node-puzzle/issues"
+  },
+  "homepage": "https://github.com/yurikrupnik/generator-node-puzzle#readme",
+  "keywords": [
+    "yeoman-generator",
+    "scaffold",
+    "node",
+    "module",
+    "cli",
+    "react",
+    "react-router",
+    "sass",
+    "code split",
+    "dynamic import",
+    "babel",
+    "front end",
+    "frontEnd",
+    "back-end",
+    "webpack",
+    "webpack-dev-server",
+    "eslint",
+    "express",
+    "koa",
+    "passport",
+    "server",
+    "app",
+    "fullstack",
+    "mongodb",
+    "session",
+    "auth"
+  ],
+  "dependencies": {
+    "generator-license": "^5.4.0",
+    "lodash.reduce": "^4.6.0",
+    "mkdirp": "^0.5.1",
+    "yeoman-generator": "^3.2.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-syntax-object-rest-spread": "^7.2.0",
+    "@babel/preset-env": "^7.4.2",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.5",
+    "coveralls": "^3.0.3",
+    "ejs-lint": "^0.3.0",
+    "eslint": "^5.15.3",
+    "eslint-loader": "^2.1.2",
+    "eslint-plugin-import": "^2.16.0",
+    "jest": "^24.5.0",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
+    "webpack-node-externals": "^1.7.2",
+    "yeoman-assert": "^3.1.1",
+    "yeoman-test": "^1.9.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "templates"
+    ]
+  }
+}

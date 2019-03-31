@@ -45,10 +45,7 @@ module.exports = class App extends Generator {
 
     async prompting() {
         this.props = await this.prompt(this.getQuestions());
-    }
-
-    configuring() {
-        const {type} = this.props;
+        const { appType } = this.props;
         const {options} = this;
         const {codeSrc} = options;
         mkdirp(codeSrc, (error) => {
@@ -62,25 +59,29 @@ module.exports = class App extends Generator {
             path: `${codeSrc}/assets`
         });
 
-        this.composeWith(require.resolve('../jest/app'), {
-            // destination
-        });
+        this.composeWith(require.resolve('../jest/app'));
         this.composeWith(require.resolve('../eslint/app'));
         this.composeWith(require.resolve('../webpack/app'));
 
-        if (type === 'fullstack') {
+        console.log('appType', appType);
+
+
+        if (appType === 'fullstack') {
             this.composeWith(require.resolve('../client/generators/app'), {
-                // fullstack: true
+                fullstack: true
             });
             this.composeWith(require.resolve('../server/generators/app'), {
-                // fullstack: true
+                fullstack: true
             });
         }
-        if (type === 'client') {
+        if (appType === 'client') {
             this.composeWith(require.resolve('../client/generators/app'));
-        } else if (type === 'server') {
+        } else if (appType === 'server') {
             this.composeWith(require.resolve('../server/generators/app'),);
         }
+    }
+
+    configuring() {
         this.config.set();
     }
 
@@ -101,6 +102,7 @@ module.exports = class App extends Generator {
         return {
             name: name,
             version: '0.0.0',
+            engines : { node : ">=6" },
             scripts: {},
             main: `${path}/index.js`,
             dependencies: {},

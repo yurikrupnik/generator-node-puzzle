@@ -1,6 +1,6 @@
 const Generator = require('yeoman-generator/lib');
 
-module.exports = class D extends Generator {
+module.exports = class Babel extends Generator {
     constructor(args, opts) {
         super(args, opts);
     }
@@ -23,12 +23,16 @@ module.exports = class D extends Generator {
         this.fs.writeJSON(this.destinationPath('.babelrc'), defaultBabelConfig);
     }
 
-    install() {
+    _installDevPackages() {
         this.npmInstall([
             '@babel/core',
             '@babel/plugin-syntax-object-rest-spread',
             "@babel/plugin-syntax-dynamic-import",
             '@babel/preset-env'
         ], { 'save-dev': true });
+    }
+
+    install() {
+        // this._installDevPackages();
     }
 };
