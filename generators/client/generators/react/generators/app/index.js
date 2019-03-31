@@ -25,7 +25,6 @@ module.exports = class ReactGenerator extends Generator {
             desc: 'Include sass files',
             default: false
         });
-
     }
 
     configuring() {
@@ -63,8 +62,8 @@ module.exports = class ReactGenerator extends Generator {
     }
 
     install() {
-        this._installPackages();
-        this._installDevPackages();
+        // this._installPackages();
+        // this._installDevPackages();
     }
 
     conflicts() { // todo test

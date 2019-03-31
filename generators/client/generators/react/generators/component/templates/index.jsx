@@ -1,9 +1,9 @@
 import React from 'react';
 
-const ComponentName = () => (
+const <%= name %> = () => (
     <div>
-        ComponentName
+        <%= name %>
     </div>
 );
 
-export default ComponentName;
+export default <%= name %>;

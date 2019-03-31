@@ -6,7 +6,7 @@ module.exports = class Component extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
-        this.argument('name', {type: String, required: true});
+        // this.argument('name', {type: String, required: true});
 
         this.option('css', {
             type: Boolean,
@@ -27,6 +27,13 @@ module.exports = class Component extends Generator {
             type: String,
             required: false,
             desc: 'Destination path of a component',
+            default: ''
+        });
+
+        this.option('name', {
+            type: String,
+            required: true,
+            desc: 'Component name',
             default: ''
         });
     }

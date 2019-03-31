@@ -8,6 +8,13 @@ const {
 } = global;
 
 describe('jest generator', () => {
+    test('jest with setup options', function () {
+        return helpers.run(path.join(__dirname, '../index'))
+            .withOptions({ setup: true })
+            .then(function() {
+                assert.file('jestsetup.js');
+            });
+    });
     test('jest with default options', function () {
         return helpers.run(path.join(__dirname, '../index'))
             .then(function() {
@@ -16,6 +23,7 @@ describe('jest generator', () => {
                 assert.fileContent('package.json', 'jest src/ --watch');
                 assert.fileContent('package.json', 'jest e2e/');
                 assert.file('e2e');
+                assert.noFile('jestsetup.js');
             });
     });
 
@@ -30,7 +38,7 @@ describe('jest generator', () => {
                 assert.fileContent('package.json', 'jest lol/ --coverage');
                 assert.fileContent('package.json', 'jest lol/ --watch');
                 assert.fileContent('package.json', 'jest mi/');
-                assert.file('mi');
+                assert.file('mi/app.test.js');
                 assert.noFile('e2e');
             });
     });
@@ -42,6 +50,27 @@ describe('jest generator', () => {
             })
             .then(function() {
                 assert.noFileContent('package.json', 'test:e2e');
+            });
+    });
+
+    test('jest with setup option', function () { // todo describe this
+        return helpers.run(path.join(__dirname, '../index'))
+            .withOptions({
+                setup: true,
+            })
+            .then(function() {
+                assert.fileContent('package.json', './jestsetup.js');
+            });
+    });
+
+
+    test('jest with local config', function () { // todo describe this
+        return helpers.run(path.join(__dirname, '../index'))
+            .withOptions({
+                css: true,
+            })
+            .then(function() {
+                assert.fileContent('package.json', 'identity-obj-proxy');
             });
     });
 });

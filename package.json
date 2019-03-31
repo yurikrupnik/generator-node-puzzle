@@ -2,7 +2,7 @@
   "name": "generator-node-puzzle",
   "version": "0.0.0",
   "description": "Yeoman generator for puzzling javascript projects, client side, server side and combined with many features",
-  "main": "generators/app/index.js",
+  "main": "index.js",
   "scripts": {
     "lint:templates": "ejslint generators/app/templates**",
     "lint:generator": "eslint generators/app/index.js",
@@ -75,6 +75,10 @@
     "yeoman-assert": "^3.1.1",
     "yeoman-test": "^1.9.1"
   },
+  "files": [
+    "index.js",
+    "generators"
+  ],
   "jest": {
     "testEnvironment": "node",
     "testPathIgnorePatterns": [

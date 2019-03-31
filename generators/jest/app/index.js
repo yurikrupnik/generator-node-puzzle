@@ -24,11 +24,24 @@ module.exports = class JestGenerator extends Generator {
             desc: 'Include e2e',
             default: true
         });
+
+        this.option('setup', {
+            type: Boolean,
+            required: false,
+            desc: 'Include jestsetup.js file',
+            default: false
+        });
+
+        this.option('css', {
+            type: Boolean,
+            required: false,
+            desc: 'Include css to config',
+            default: false
+        });
     }
 
     writing() {
-        const { path, e2ePath, e2e } = this.options;
-
+        const { path, e2ePath, e2e, setup, css } = this.options;
         const scripts = {
             'test': `jest ${path}/`,
             'test:watch': `jest ${path}/ --watch`,
@@ -39,17 +52,40 @@ module.exports = class JestGenerator extends Generator {
             'test:e2e': `jest ${e2ePath}/`,
         };
 
+        let jestConfig = {
+            "modulePathIgnorePatterns": [
+                "<rootDir>/.*/__mocks__"
+            ]
+        };
+
+        if (setup) {
+            jestConfig.setupFiles = ['./jestsetup.js'];
+        }
+
+        if (css) {
+            jestConfig.moduleNameMapper = {
+                "\\.(css|less|scss)$": "identity-obj-proxy"
+            }
+        }
+
         this.fs.extendJSON(
             this.destinationPath('package.json'),
             {
-                scripts: Object.assign({}, scripts, e2e ? e2eScripts : {})
+                scripts: Object.assign({}, scripts, e2e ? e2eScripts : {}),
+                jest: jestConfig
             }
         );
 
         if (e2e) {
             this.fs.copyTpl(
-                this.templatePath(),
+                this.templatePath('e2e'),
                 this.destinationPath(e2ePath)
+            );
+        }
+        if (setup) {
+            this.fs.copyTpl(
+                this.templatePath('jestsetup.js'),
+                this.destinationPath('jestsetup.js')
             );
         }
     }

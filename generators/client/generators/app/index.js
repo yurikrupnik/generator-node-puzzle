@@ -107,7 +107,7 @@ module.exports = class ClientGenerator extends Generator {
     }
 
     install() {
-        this._handleClientWebpackPackages();
+        // this._handleClientWebpackPackages();
     }
 
     end() {
