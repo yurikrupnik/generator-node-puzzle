@@ -70,6 +70,7 @@ module.exports = class ClientGenerator extends Generator {
     }
 
     configuring() {}
+
     writing() {
         const { props } = this;
         const { sass } = props;

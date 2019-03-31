@@ -1,8 +1,8 @@
 var Generator = require('yeoman-generator/lib');
-var path = require('path');
+// var path = require('path');
 // var G = require('generator-webpack-mussia');
 
-var reduce = require('lodash.reduce');
+// var reduce = require('lodash.reduce');
 const questions = require('./questions');
 // const utils = require('../app/utils'); // todo fix file system in project
 

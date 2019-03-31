@@ -19,7 +19,7 @@ describe('server generator', () => {
                 // confirm: true
             })
             .then(function () {
-                // assert.file('src/index.js');
+                // assert.file('src/index.jsx');
             });
     });
     test('server side express', function () {
@@ -33,7 +33,7 @@ describe('server generator', () => {
                 // confirm: true
             })
             .then(function () {
-                // assert.file('src/index.js');
+                // assert.file('src/index.jsx');
             });
     });
 });

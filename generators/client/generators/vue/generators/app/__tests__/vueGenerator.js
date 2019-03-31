@@ -16,6 +16,7 @@ describe('vue generator', () => {
                 })
                 .then(function() {
                     assert.file('src/index.js');
+                    assert.fileContent('src/index.js', 'vue');
                 });
         });
         test('vue sass exits', function () {

@@ -8,11 +8,35 @@ const {
 } = global;
 
 describe('angular generator', () => {
-    test('angular generator defaults', () => {
-        return helpers.run(path.join(__dirname, '../index.js'))
-            .then(function () {
-                // assert.file('.eslintrc');
-                // assert.fileContent('.eslintrc', 'eslint:recommended');
-            });
+    describe('angular config file', () => {
+        test('angular client defaults', function () {
+            return helpers.run(path.join(__dirname, '../index.js'))
+                .withOptions({
+
+                })
+                .then(function() {
+                    assert.file('src/index.js');
+                    assert.fileContent('src/index.js', 'angular');
+                });
+        });
+        test('react sass exits', function () {
+            return helpers.run(path.join(__dirname, '../index.js'))
+                .withOptions({
+                    sass: true
+                })
+                .then(function() {
+                    assert.file('src/index.js');
+                });
+        });
+        test('react sass does not exits', function () {
+            return helpers.run(path.join(__dirname, '../index.js'))
+                .withOptions({
+                    sass: false
+                })
+                .then(function() {
+                    assert.file('src/index.js');
+                });
+        });
+
     });
 });

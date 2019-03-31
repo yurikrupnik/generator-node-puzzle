@@ -15,4 +15,14 @@ describe('Client generator', () => {
                 // assert.fileContent('.eslintrc', 'eslint:recommended');
             });
     });
+    test('Client generator defaults', () => {
+        return helpers.run(path.join(__dirname, '../index.js'))
+            .withOptions({
+                type: 'react'
+            })
+            .then(function () {
+                // assert.file('.eslintrc');
+                // assert.fileContent('.eslintrc', 'eslint:recommended');
+            });
+    });
 });

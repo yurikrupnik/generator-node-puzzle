@@ -1,6 +1,6 @@
 var Generator = require('yeoman-generator/lib');
 // var Webpack = require('../webpack/app');
-var path = require('path');
+// var path = require('path');
 // var webpack = require('../webpack/app');
 // var G = require('generator-webpack-mussia');
 

@@ -6,6 +6,11 @@ module.exports = class App extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
+        // console.log('constocutor opts type',  opts.type);
+        // console.log('constocutor opts codeSrc',  opts.codeSrc);
+        // console.log('constocutor opts name',  opts.name);
+
+
         this.types = [
             {
                 value: 'fullstack',
@@ -43,17 +48,24 @@ module.exports = class App extends Generator {
         });
     }
 
-    async prompting() {
-        this.props = await this.prompt(this.getQuestions());
-        const { appType } = this.props;
-        const {options} = this;
-        const {codeSrc} = options;
+    async _buildCodeSrcFolder() {
+        const {codeSrc} = this.options;
         mkdirp(codeSrc, (error) => {
             if (error) {
                 console.log('error', error);
             }
         });
-        // this.composeWith(require.resolve('generator-license'));
+    }
+
+    async prompting() {
+        this.props = await this.prompt(this.getQuestions());
+        await this._buildCodeSrcFolder();
+        const {projectType} = this.props;
+        const {options} = this;
+        const {codeSrc} = options;
+
+        this.composeWith(require.resolve('generator-license'));
+
         this.composeWith(require.resolve('../babel/app'));
         this.composeWith(require.resolve('../assets/app'), {
             path: `${codeSrc}/assets`
@@ -63,10 +75,8 @@ module.exports = class App extends Generator {
         this.composeWith(require.resolve('../eslint/app'));
         this.composeWith(require.resolve('../webpack/app'));
 
-        console.log('appType', appType);
 
-
-        if (appType === 'fullstack') {
+        if (projectType === 'fullstack') {
             this.composeWith(require.resolve('../client/generators/app'), {
                 fullstack: true
             });
@@ -74,9 +84,9 @@ module.exports = class App extends Generator {
                 fullstack: true
             });
         }
-        if (appType === 'client') {
+        if (projectType === 'client') {
             this.composeWith(require.resolve('../client/generators/app'));
-        } else if (appType === 'server') {
+        } else if (projectType === 'server') {
             this.composeWith(require.resolve('../server/generators/app'),);
         }
     }
@@ -89,7 +99,7 @@ module.exports = class App extends Generator {
         return [
             {
                 type: 'list',
-                name: 'appType',
+                name: 'projectType',
                 message: 'Node app type?',
                 choices: this.types,
                 store: true
@@ -97,36 +107,35 @@ module.exports = class App extends Generator {
         ];
     }
 
-    _getDefaultScripts() {
-        const {path, name} = this.options;
+    _isReactIncludedInProject() {
+        const {promptValues} = this.config.getAll();
+        return promptValues && promptValues.viewEngine === 'react';
+    }
+
+    _getDefaultPackage() {
+        const {codeSrc, name} = this.options;
+        const filePrefix = this._isReactIncludedInProject() ? 'jsx' : 'js';
         return {
             name: name,
             version: '0.0.0',
-            engines : { node : ">=6" },
+            engines: {node: ">=6"},
             scripts: {},
-            main: `${path}/index.js`,
+            main: `${codeSrc}/index.${filePrefix}`,
             dependencies: {},
             devDependencies: {}
         };
     }
 
-    overrideEslint() {
-
+    _createPackage() {
+        this.fs.extendJSON(this.destinationPath('package.json'), this._getDefaultPackage());
     }
+
 
     writing() {
-        this.fs.extendJSON(this.destinationPath('package.json'), this._getDefaultScripts());
-        // this.fs.extendJSON(this.destinationPath('.eslintrc'), this.overrideEslint());
+        this._createPackage();
 
-    }
-
-    install() {
-        // console.log('App this.config.getAll()', this.config.getAll());
-
-        // this.npmInstall();
     }
 
     end() {
-        this.log(`You have finished building ${this.options.name}.`);
     }
 };
