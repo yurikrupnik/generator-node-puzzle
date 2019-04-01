@@ -1,8 +1,8 @@
 const Generator = require('yeoman-generator/lib');
-// const basenam/**/e = require('path').basename;
-// var mkdirp = require('mkdirp');
+const basename = require('path').basename;
+var mkdirp = require('mkdirp');
 
-module.exports = class ExpressGenerator extends Generator {
+module.exports = class ServicesGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
@@ -42,11 +42,17 @@ module.exports = class ExpressGenerator extends Generator {
         });
     }
 
+    // configuring() {
+    //     // this._buildCodeSrcFolder();
+    //     this.config.set({
+    //     //     src: this.options.codeSrc,
+    //         componentDestination: this.options.codeSrc + 'components',
+    //         // apiDestination: this.options.codeSrc + 'api'
+    //     });
+    // }
 
     writing() {
         const { path, port, db, auth, io, oauth } = this.options;
-        // console.log('oauth', oauth);
-
         this.fs.copyTpl(
             this.templatePath(),
             this.destinationPath(path),
@@ -58,6 +64,7 @@ module.exports = class ExpressGenerator extends Generator {
                 oauth
             }
         );
+
     }
 
     install() {

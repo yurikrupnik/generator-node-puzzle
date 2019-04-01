@@ -31,209 +31,294 @@ function assign(ob1, ob2) {
         ob1,
         ob2);
 }
+
 const mock = {
     'generator-node-puzzle': {
         promptValues: {
-            appType: 'client',
+            projectType: 'client',
             viewEngine: 'react',
             sass: true,
-            serverFramework: 'koa'
+            serverFramework: 'koa',
+            srr: false
         }
     }
 };
 
 // const appOptions = ['fullstack', 'client', 'server']
-
-
-describe('App generator', () => {
-    describe('run with defaults', () => {
-        test('default package.json', () => {
+describe('app', () => {
+    describe('projectType question', () => {
+        test('server projectType', () => {
             return helpers.run(path.join(__dirname, '../index.js'))
-                .withPrompts(combinedPromps)
-                .withOptions({})
-                .then(function () {
-                    assert.file('package.json');
-                });
+                .withPrompts(Object.assign({},combinedPromps,
+                    {
+                        projectType: 'server'
+                    }));
         });
-        // test('default yo-rc.json', () => {
-        //     return helpers.run(path.join(__dirname, '../index.jsx'))
-        //         // .withLocalConfig(mock)
-        //         .withPrompts(licenceMockPromp)
-        //         .withOptions({})
-        //         .then(function () {
-        //             assert.file('package.json');
-        //         });
-        // });
-        // test('should override default name', () => {
-        //     return helpers.run(path.join(__dirname, '../index.jsx'))
-        //         .withPrompts(licenceMockPromp)
-        //         .withOptions({
-        //             name: 'd'
-        //         })
-        //         .then(function () {
-        //             assert.file('package.json');
-        //             assert.fileContent('package.json', '"name": "d"');
-        //         });
-        // });
+        test('client projectType', () => {
+            return helpers.run(path.join(__dirname, '../index.js'))
+                .withPrompts(Object.assign({},combinedPromps,
+                    {
+                        projectType: 'client'
+                    }));
+        });
+        test('fillstack projectType', () => {
+            return helpers.run(path.join(__dirname, '../index.js'))
+                .withPrompts(Object.assign({},combinedPromps,
+                    {
+                        projectType: 'fullstack'
+                    }));
+        });
     });
-    // describe('package.json creation', () => {
-    //     test('default package.json', () => {
-    //         return helpers.run(path.join(__dirname, '../index.jsx'))
-    //             // .withLocalConfig()
-    //             .withPrompts(licenceMockPromp)
-    //             .withOptions({
-    //                 // type: 'client',
-    //                 // codeSrc: 'lol',
-    //                 // name: 'ass'
-    //             })
-    //             .then(function () {
-    //                 assert.file('package.json');
-    //             });
-    //     });
-    //     test('should override default name', () => {
-    //         return helpers.run(path.join(__dirname, '../index.jsx'))
-    //             .withPrompts(licenceMockPromp)
-    //             .withOptions({
-    //                 name: 'lol'
-    //             })
-    //             .then(function () {
-    //                 assert.file('package.json');
-    //                 assert.fileContent('package.json', '"name": "lol"');
-    //             });
-    //     });
-    // });
-    // describe('src project files creation', () => {
-    //     test('should create default folder', () => {
-    //         return helpers.run(path.join(__dirname, '../index.jsx'))
-    //             .withPrompts(licenceMockPromp)
-    //             .withOptions({})
-    //             .then(function () {
-    //                 assert.file('src');
-    //             });
-    //     });
-    //     test('should override default folder by codeSrc', () => {
-    //         return helpers.run(path.join(__dirname, '../index.jsx'))
-    //             .withPrompts(licenceMockPromp)
-    //             .withOptions({
-    //                 codeSrc: 'lol'
-    //             })
-    //             .then(function () {
-    //                 assert.file('lol');
-    //             });
-    //     });
-    // });
-    // describe('codeSrc option', () => {
-    //     // test('do some stuff', () => {
-    //     //     return helpers.run(path.join(__dirname, '../index.jsx'))
-    //     //         .withPrompts(licenceMockPromp)
-    //     //         .withOptions({
-    //     //             type: 'server',
-    //     //             codeSrc: 'lol',
-    //     //             name: 'ass'
-    //     //         })
-    //     //         .then(function () {
-    //     //             assert.file('lol');
-    //     //         });
-    //     // });
-    //     // test('should create custom src folder', () => {
-    //     //     return helpers.run(path.join(__dirname, '../index.jsx'))
-    //     //         .withPrompts(Object.assign({},
-    //     //             licenceMockPromp,
-    //     //             {
-    //     //                 // type: 'server',
-    //     //                 codeSrc: 'lol'
-    //     //             }))
-    //     //         .then(function () {
-    //     //             assert.file('src');
-    //     //         });
-    //     // });
-    // });
-    // describe('codeSrc option', () => {
-    //     test('should create default src folder', () => {
-    //         return helpers.run(path.join(__dirname, '../index.jsx'))
-    //             .withPrompts(licenceMockPromp)
-    //             .then(function () {
-    //                 assert.file('src');
-    //             });
-    //     });
-    //     test('should create custom src folder', () => {
-    //         return helpers.run(path.join(__dirname, '../index.jsx'))
-    //             .withPrompts(Object.assign({},
-    //                 licenceMockPromp,
-    //                 {
-    //                     // type: 'server',
-    //                     codeSrc: 'lol'
-    //                 }))
-    //             .then(function () {
-    //                 assert.file('src');
-    //             });
-    //     });
-    // });
-    // describe('default withPrompts and options', () => {
-    //     describe('withPrompts', () => {
-    //         test('generate fullstack', () => {
-    //             return helpers.run(path.join(__dirname, '../index.jsx'))
-    //                 .withPrompts(Object.assign({},
-    //                     licenceMockPromp,
-    //                     {
-    //                         type: 'fullstack'
-    //                     }))
-    //                 .then(function () {
-    //                     assert.file('package.json');
-    //                 });
-    //         });
-    //         test('generateserver', () => {
-    //             return helpers.run(path.join(__dirname, '../index.jsx'))
-    //                 .withPrompts(Object.assign({},
-    //                     licenceMockPromp,
-    //                     {
-    //                         type: 'server'
-    //                     }))
-    //                 .then(function () {
-    //                     assert.file('package.json');
-    //                 });
-    //         });
-    //         test('generate client', () => {
-    //             return helpers.run(path.join(__dirname, '../index.jsx'))
-    //                 .withPrompts(Object.assign({},
-    //                     licenceMockPromp,
-    //                     {
-    //                         type: 'client'
-    //                     }))
-    //                 .then(function () {
-    //                     assert.file('package.json');
-    //                 });
-    //         });
-    //     });
-    //
-    //     describe('withPrompts', () => {
-    //         test('generate fullstack', () => {
-    //             return helpers.run(path.join(__dirname, '../index.jsx'))
-    //                 .withOptions({
-    //                     type: 'client'
-    //                 })
-    //                 .then(function () {
-    //                     assert.file('package.json');
-    //                 });
-    //         });
-    //         test('generateserver', () => {
-    //             return helpers.run(path.join(__dirname, '../index.jsx'))
-    //                 .withOptions({
-    //                     type: 'server'
-    //                 })
-    //                 .then(function () {
-    //                     assert.file('package.json');
-    //                 });
-    //         });
-    //         test('generate client', () => {
-    //             return helpers.run(path.join(__dirname, '../index.jsx'))
-    //                 .withOptions({
-    //                     type: 'fullstack'
-    //                 })
-    //                 .then(function () {
-    //                     assert.file('package.json');
-    //                 });
-    //         });
-    //     });
-    // });
+
+    test('default files', () => {
+        return helpers.run(path.join(__dirname, '../index.js'))
+            .withPrompts(Object.assign({},combinedPromps,
+                {}))
+            .then(function () {
+                assert.file('package.json');
+                assert.file('.env');
+                assert.file('.gitignore');
+                assert.file('.travis.yml');
+                assert.file('.editorconfig');
+            });
+    });
+
+    test('should override default name', () => {
+        return helpers.run(path.join(__dirname, '../index.js'))
+            .withPrompts(licenceMockPromp)
+            .withOptions({
+                name: 'd'
+            })
+            .then(function () {
+                assert.fileContent('package.json', '"name": "d"');
+            });
+    });
 });
+
+// describe('App generator', () => {
+//     describe('run with defaults', () => {
+//         test('default files', () => {
+//             return helpers.run(path.join(__dirname, '../index.js'))
+//                 .withPrompts(combinedPromps)
+//                 .withOptions({})
+//                 .then(function () {
+//                     assert.file('package.json');
+//                     assert.file('.env');
+//                     assert.file('.gitignore');
+//                     assert.file('.travis.yml');
+//                     assert.file('.editorconfig');
+//                 });
+//         });
+//
+//
+
+//     });
+//     // describe('package.json creation', () => {
+//     //     test('default package.json', () => {
+//     //         return helpers.run(path.join(__dirname, '../index.jx'))
+//     //             // .withLocalConfig()
+//     //             .withPrompts(licenceMockPromp)
+//     //             .withOptions({
+//     //                 // type: 'client',
+//     //                 // codeSrc: 'lol',
+//     //                 // name: 'ass'
+//     //             })
+//     //             .then(function () {
+//     //                 assert.file('package.json');
+//     //             });
+//     //     });
+//     //     test('should override default name', () => {
+//     //         return helpers.run(path.join(__dirname, '../index.js'))
+//     //             .withPrompts(licenceMockPromp)
+//     //             .withOptions({
+//     //                 name: 'lol'
+//     //             })
+//     //             .then(function () {
+//     //                 assert.file('package.json');
+//     //                 assert.fileContent('package.json', '"name": "lol"');
+//     //             });
+//     //     });
+//     // });
+//     describe('src project files creation', () => {
+//         test('should create default folder', () => {
+//             return helpers.run(path.join(__dirname, '../index.js'))
+//                 .withPrompts(licenceMockPromp)
+//                 .withOptions({})
+//                 .then(function () {
+//                     assert.file('src');
+//                 });
+//         });
+//         test('should override default folder by codeSrc', () => {
+//             return helpers.run(path.join(__dirname, '../index.js'))
+//                 .withPrompts(licenceMockPromp)
+//                 .withOptions({
+//                     codeSrc: 'lol'
+//                 })
+//                 .then(function () {
+//                     assert.file('lol');
+//                 });
+//         });
+//     });
+//     // describe('codeSrc option', () => {
+//     //     // test('do some stuff', () => {
+//     //     //     return helpers.run(path.join(__dirname, '../index.js'))
+//     //     //         .withPrompts(licenceMockPromp)
+//     //     //         .withOptions({
+//     //     //             type: 'server',
+//     //     //             codeSrc: 'lol',
+//     //     //             name: 'ass'
+//     //     //         })
+//     //     //         .then(function () {
+//     //     //             assert.file('lol');
+//     //     //         });
+//     //     // });
+//     //     test('should create custom src folder', () => {
+//     //         return helpers.run(path.join(__dirname, '../index.js'))
+//     //             .withPrompts(Object.assign({},
+//     //                 licenceMockPromp,
+//     //                 {
+//     //                     // type: 'server',
+//     //                     codeSrc: 'lol'
+//     //                 }))
+//     //             .then(function () {
+//     //                 assert.file('lol');
+//     //             });
+//     //     });
+//     // });
+//     describe('codeSrc option', () => {
+//         test('should create default src folder', () => {
+//             return helpers.run(path.join(__dirname, '../index.js'))
+//                 .withPrompts(licenceMockPromp)
+//                 .then(function () {
+//                     assert.file('src');
+//                 });
+//         });
+//
+//         test('should create custom src folder', () => {
+//             return helpers.run(path.join(__dirname, '../index.js'))
+//                 .withPrompts(licenceMockPromp)
+//                 .withOptions({
+//                     codeSrc: 'lol'
+//                 })
+//                 .then(function () {
+//                     assert.file('lol');
+//                 });
+//         });
+//     });
+//
+//     describe('default withPrompts and options', () => {
+//         describe('withPrompts', () => {
+//             test('generate fullstack', () => {
+//                 return helpers.run(path.join(__dirname, '../index.js'))
+//                     .withPrompts(Object.assign({},
+//                         licenceMockPromp,
+//                         {
+//                             type: 'fullstack'
+//                         }))
+//                     .then(function () {
+//                         assert.file('package.json');
+//                     });
+//             });
+//             test('generate server', () => {
+//                 return helpers.run(path.join(__dirname, '../index.js'))
+//                     .withPrompts(Object.assign({},
+//                         licenceMockPromp,
+//                         {
+//                             type: 'server'
+//                         }))
+//                     .then(function () {
+//                         assert.file('package.json');
+//                     });
+//             });
+//             test('generate client', () => {
+//                 return helpers.run(path.join(__dirname, '../index.js'))
+//                     .withPrompts(Object.assign({},
+//                         licenceMockPromp,
+//                         {
+//                             type: 'client'
+//                         }))
+//                     .then(function () {
+//                         assert.file('package.json');
+//                     });
+//             });
+//         });
+//
+//         describe('withPrompts', () => {
+//             test('generate fullstack', () => {
+//                 return helpers.run(path.join(__dirname, '../index.js'))
+//                     .withPrompts(licenceMockPromp)
+//                     .withOptions({
+//                         type: 'client'
+//                     })
+//                     .then(function () {
+//                         assert.file('package.json');
+//                     });
+//             });
+//             test('generateserver', () => {
+//                 return helpers.run(path.join(__dirname, '../index.js'))
+//                     .withPrompts(licenceMockPromp)
+//                     .withOptions({
+//                         type: 'server'
+//                     })
+//                     .then(function () {
+//                         assert.file('package.json');
+//                     });
+//             });
+//             test('generate client', () => {
+//                 return helpers.run(path.join(__dirname, '../index.js'))
+//                     .withPrompts(licenceMockPromp)
+//                     .withOptions({
+//                         type: 'fullstack'
+//                     })
+//                     .then(function () {
+//                         assert.file('package.json');
+//                     });
+//             });
+//         });
+//         describe('config file', () => {
+//             test('default', () => {
+//                 return helpers.run(path.join(__dirname, '../index.js'))
+//                     .withPrompts(licenceMockPromp)
+//                     .withOptions({
+//                         type: 'client'
+//                     })
+//                     .then(function () {
+//                         assert.file('src/config.js');
+//                         assert.fileContent('src/config.js', '5000');
+//                     });
+//             });
+//             test('pass port and name and codeSrc', () => {
+//                 return helpers.run(path.join(__dirname, '../index.js'))
+//                     .withPrompts(licenceMockPromp)
+//                     .withOptions({
+//                         name: 'yuro',
+//                         port: 4444
+//                     })
+//                     .then(function () {
+//                         assert.fileContent('src/config.js', '4444');
+//                         assert.fileContent('src/config.js', 'mongodb://localhost/yuro');
+//                     });
+//             });
+//             test('generateserver', () => {
+//                 return helpers.run(path.join(__dirname, '../index.js'))
+//                     .withPrompts(licenceMockPromp)
+//                     .withOptions({
+//                         type: 'server'
+//                     })
+//                     .then(function () {
+//                         assert.file('package.json');
+//                     });
+//             });
+//             test('generate client', () => {
+//                 return helpers.run(path.join(__dirname, '../index.js'))
+//                     .withPrompts(licenceMockPromp)
+//                     .withOptions({
+//                         type: 'fullstack'
+//                     })
+//                     .then(function () {
+//                         assert.file('package.json');
+//                     });
+//             });
+//         });
+//     });
+// });

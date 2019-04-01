@@ -10,7 +10,9 @@ const {
 describe('server generator', () => {
     test('server side koa', function () {
         return helpers.run(path.join(__dirname, '../index.js'))
-        // .withOptions({})
+            .withOptions({
+                serverFramework: 'koa'
+            })
             .withPrompts({
                 // serverFramework: 'koa',
                 // db: true,
@@ -25,6 +27,9 @@ describe('server generator', () => {
     test('server side express', function () {
         return helpers.run(path.join(__dirname, '../index.js'))
         // .withOptions({})
+            .withOptions({
+                serverFramework: 'express'
+            })
             .withPrompts({
                 // serverFramework: 'express',
                 // db: true,

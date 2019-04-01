@@ -12,6 +12,7 @@ describe('Eslint generator', () => {
         return helpers.run(path.join(__dirname, '../index.js'))
             .then(function () {
                 assert.file('.eslintrc');
+                assert.file('.eslintignore');
                 assert.fileContent('.eslintrc', 'eslint:recommended');
             });
     });

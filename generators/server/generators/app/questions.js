@@ -1,14 +1,8 @@
 const questions = [
     {
-        type: 'confirm',
-        name: 'ssr',
-        message: 'Would you like Server side rendering?',
-        store: true
-    },
-    {
         type: 'list',
         name: 'serverFramework',
-        message: 'Choose out of server side libraries',
+        message: 'Choose server side library',
         choices: [
             {
                 value: 'koa',
@@ -59,6 +53,12 @@ const questions = [
         name: 'io',
         message: 'Would you like to use SocketIO?',
         default: true
+    },
+    {
+        type: 'confirm',
+        name: 'ssr',
+        message: 'Would you like Server side rendering?',
+        store: true
     }
 ];
 

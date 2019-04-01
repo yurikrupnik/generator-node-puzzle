@@ -18,8 +18,8 @@ describe('react generator', () => {
 
                 })
                 .then(function() {
-                    assert.file('src/index.jsx');
-                    assert.fileContent('src/index.jsx', 'react');
+                    assert.file('index.jsx');
+                    assert.fileContent('index.jsx', 'react');
                 });
         });
         test('react sass exits', function () {
@@ -28,16 +28,17 @@ describe('react generator', () => {
                     sass: true
                 })
                 .then(function() {
-                    assert.file('src/index.jsx');
+                    assert.file('index.jsx');
                 });
         });
         test('react sass does not exits', function () {
             return helpers.run(path.join(__dirname, '../index.js'))
                 .withOptions({
-                    sass: false
+                    sass: false,
+                    path: 'lol'
                 })
                 .then(function() {
-                    assert.file('src/index.jsx');
+                    assert.file('lol/index.jsx');
                 });
         });
     });

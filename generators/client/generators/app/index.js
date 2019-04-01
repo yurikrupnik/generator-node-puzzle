@@ -35,6 +35,13 @@ module.exports = class ClientGenerator extends Generator {
             default: false,
             desc: 'Include SASS .scss files'
         });
+
+        this.option('path', {
+            type: String,
+            required: false,
+            desc: 'Destination path of a files',
+            default: ''
+        });
     }
 
     async prompting() {
@@ -65,6 +72,13 @@ module.exports = class ClientGenerator extends Generator {
                 message: 'Would you like to use SASS to compile CSS',
                 default: true,
                 store: true
+            },
+            {
+                type: 'confirm',
+                name: 'codeSplit',
+                message: 'Would you like to use dynamic import',
+                default: true,
+                store: true
             }
         ]);
     }
@@ -72,20 +86,23 @@ module.exports = class ClientGenerator extends Generator {
     configuring() {}
 
     writing() {
-        const { props } = this;
+        const { props, options } = this;
         const { sass } = props;
+        const { path } = options;
         if (props.viewEngine === 'react') {
             this.composeWith(require.resolve('../react/generators/app'), {
                 sass,
-                // srr: true
+                path
             });
         } else if (props.viewEngine === 'vue') {
             this.composeWith(require.resolve('../vue/generators/app'), {
-                sass
+                sass,
+                path
             });
         } else if (props.viewEngine === 'angular') {
             this.composeWith(require.resolve('../angular/generators/app'), {
-                sass
+                sass,
+                path
             });
         }
     }

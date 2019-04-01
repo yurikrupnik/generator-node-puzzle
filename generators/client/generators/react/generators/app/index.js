@@ -32,6 +32,13 @@ module.exports = class ReactGenerator extends Generator {
             desc: 'Include server side rendering',
             default: false
         });
+
+        this.option('path', {
+            type: String,
+            required: false,
+            desc: 'Destination path of a files',
+            default: ''
+        });
     }
 
     configuring() {
@@ -42,10 +49,15 @@ module.exports = class ReactGenerator extends Generator {
     }
 
     writing() {
+        const { srr, path } = this.options;
+        const { promptValues } = this.config.getAll();
         this.fs.copyTpl(
             this.templatePath(),
-            this.destinationPath('src'),
-            this.options,
+            this.destinationPath(path),
+            {
+                srr: (promptValues && promptValues.ssr) || srr,
+
+            }
         );
     }
 

@@ -17,6 +17,7 @@ module.exports = class Eslint extends Generator {
         };
 
         this.fs.writeJSON(this.destinationPath('.eslintrc'), eslintDefault);
+        this.fs.write(this.destinationPath('.eslintignore'), 'coverage');
     }
 
     _installDevPackages() {

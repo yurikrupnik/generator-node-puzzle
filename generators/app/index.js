@@ -6,11 +6,6 @@ module.exports = class App extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
-        // console.log('constocutor opts type',  opts.type);
-        // console.log('constocutor opts codeSrc',  opts.codeSrc);
-        // console.log('constocutor opts name',  opts.name);
-
-
         this.types = [
             {
                 value: 'fullstack',
@@ -29,15 +24,8 @@ module.exports = class App extends Generator {
         this.option('codeSrc', {
             type: String,
             required: false,
-            desc: 'Project files root name',
+            desc: 'Project files root folder name',
             default: 'src'
-        });
-
-        this.option('type', {
-            type: String,
-            required: false,
-            desc: 'Project type',
-            default: ''
         });
 
         this.option('name', {
@@ -46,9 +34,16 @@ module.exports = class App extends Generator {
             desc: 'Project name to be included in the package.json',
             default: basename(process.cwd())
         });
+
+        this.option('port', {
+            type: Number,
+            required: false,
+            desc: 'Project port',
+            default: 5000
+        });
     }
 
-    async _buildCodeSrcFolder() {
+    _buildCodeSrcFolder() {
         const {codeSrc} = this.options;
         mkdirp(codeSrc, (error) => {
             if (error) {
@@ -58,41 +53,51 @@ module.exports = class App extends Generator {
     }
 
     async prompting() {
-        this.props = await this.prompt(this.getQuestions());
-        await this._buildCodeSrcFolder();
-        const {projectType} = this.props;
-        const {options} = this;
+        const { projectType } = await this.prompt(this.getQuestions());
+        const {options, port} = this;
         const {codeSrc} = options;
 
-        this.composeWith(require.resolve('generator-license'));
+        // this.composeWith(require.resolve('generator-license'));
 
-        this.composeWith(require.resolve('../babel/app'));
-        this.composeWith(require.resolve('../assets/app'), {
-            path: `${codeSrc}/assets`
-        });
-
-        this.composeWith(require.resolve('../jest/app'));
-        this.composeWith(require.resolve('../eslint/app'));
-        this.composeWith(require.resolve('../webpack/app'));
-
+        // this.composeWith(require.resolve('../babel/app'));
+        // this.composeWith(require.resolve('../assets/app'), {
+        //     path: `${codeSrc}/assets`
+        // });
+        //
+        // this.composeWith(require.resolve('../jest/app'));
+        // this.composeWith(require.resolve('../eslint/app'));
+        // this.composeWith(require.resolve('../webpack/app'));
 
         if (projectType === 'fullstack') {
             this.composeWith(require.resolve('../client/generators/app'), {
-                fullstack: true
+                fullstack: true,
+                path: codeSrc
             });
             this.composeWith(require.resolve('../server/generators/app'), {
-                fullstack: true
+                fullstack: true,
+                path: codeSrc,
+                port
             });
         }
         if (projectType === 'client') {
-            this.composeWith(require.resolve('../client/generators/app'));
+            this.composeWith(require.resolve('../client/generators/app'), {
+                path: codeSrc
+            });
         } else if (projectType === 'server') {
-            this.composeWith(require.resolve('../server/generators/app'),);
+            this.composeWith(require.resolve('../server/generators/app'),{
+                path: codeSrc,
+                port
+            });
         }
     }
 
     configuring() {
-        this.config.set();
+        this._buildCodeSrcFolder();
+        // this.config.set({
+        //     src: this.options.codeSrc,
+        //     componentDestination: this.options.codeSrc + 'components',
+        //     apiDestination: this.options.codeSrc + 'api'
+        // });
     }
 
     getQuestions() {
@@ -119,7 +124,9 @@ module.exports = class App extends Generator {
             name: name,
             version: '0.0.0',
             engines: {node: ">=6"},
-            scripts: {},
+            scripts: {
+                start: 'webpack',
+            },
             main: `${codeSrc}/index.${filePrefix}`,
             dependencies: {},
             devDependencies: {}
@@ -130,10 +137,25 @@ module.exports = class App extends Generator {
         this.fs.extendJSON(this.destinationPath('package.json'), this._getDefaultPackage());
     }
 
+    _copyConfigFiles() {
+        const { name, port, codeSrc } = this.options;
+        this.fs.copy(
+            this.templatePath('.*'),
+            this.destinationPath()
+        );
+        this.fs.copyTpl(
+            this.templatePath(),
+            this.destinationPath(codeSrc),
+            {
+                port,
+                name
+            }
+        );
+    }
 
     writing() {
         this._createPackage();
-
+        this._copyConfigFiles();
     }
 
     end() {
