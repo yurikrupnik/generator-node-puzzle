@@ -6,9 +6,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const dotenv = require('dotenv');
+<%_ if(react) { _%>
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const sassVars = require('./src/theme.js');
-const sassFuncs = require('./sassHelper');
+<%_ } _%>
 
 module.exports = env => {
     const isProd = env ? !!env.prod : false;
@@ -16,7 +16,7 @@ module.exports = env => {
     const config = isProd ? dotenv.config() : require('./src/config'); // eslint-disable-line global-require
 
     return {
-        context: path.resolve(__dirname, 'src'), // todo
+        context: path.resolve(__dirname, <%= 'destinationPath' %>), // todo
         optimization: {
             minimizer: [
                 new UglifyJsPlugin({ // todo
@@ -29,10 +29,12 @@ module.exports = env => {
         },
         target: 'web',
         resolve: {
-            extensions: ['.json', '.js', '.jsx', '.css', '.scss', '.vue'], // todo
+            extensions: ['.json', '.js', <%= react ? "'.jsx'" : "" _%>, '.css', <%= sass ? "'.scss'": "'''" _%>] // todo
+            <%_ if(react) { _%>
             alias: {
                 vue: 'vue/dist/vue.js' // todo
             }
+            <%_ } _%>
         },
         devtool: isProd ? 'source-map' : 'eval-cheap-module-source-map',
         entry: './client.jsx', // todo
@@ -47,13 +49,16 @@ module.exports = env => {
             rules: [
                 {
                     test: /\.(js|jsx)$/, // todo
-                    use: ['babel-loader'],
+                    use: ['babel-loader', 'eslint-loader'],
                     exclude: /node_modules/,
                 },
+                <%_ if(react) { _%>
                 {
                     test: /\.vue$/, // todo
                     loader: 'vue-loader'
                 },
+                <%_ } _%>
+                <%_ if(react) { _%>
                 {
                     test: /\.(html)$/, // todo
                     use: {
@@ -63,6 +68,8 @@ module.exports = env => {
                         }
                     }
                 },
+                <%_ } _%>
+
                 {
                     test: /\.(css|scss)$/, // todo
                     use: [
@@ -75,18 +82,19 @@ module.exports = env => {
                                 localIdentName: isProd ? '[hash:base64]' : '[local]--[hash:base64:5]'
                             }
                         },
+                        <%_ if(react) { _%>
                         { // todo
-                            loader: 'sass-loader',
-                            options: {
-                                functions: sassFuncs(sassVars)
-                            }
+                            loader: 'sass-loader'
                         }
+                        <%_ } _%>
                     ],
                 },
+                <%_ if(react) { _%>
                 { // todo
                     test: /\.ejs$/,
                     use: 'raw-loader'
                 },
+                <%_ } _%>
                 {
                     test: /\.(png|jpg|gif)$/,
                     use: [

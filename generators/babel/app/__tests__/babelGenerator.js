@@ -1,24 +1,35 @@
 const helpers = require('yeoman-test');
 const path = require('path');
+const assert = require('yeoman-assert');
 
 const {
     describe,
     test,
-    __dirname
 } = global;
 
-// describe('babel generator', () => {
-// describe('babelrc file', () => {
-test('generate .babelrc file', function () {
-    expect(1).toBe(1);
-    // return helpers.run(path.join(__dirname, '../index.js'))
-    //     .then(function() {
-    // assert.file('.babelrc');
-    // assert.fileContent('.babelrc', '@babel/plugin-syntax-object-rest-spread');
-    // assert.fileContent('.babelrc', '@babel/preset-env');
-    // });
-});
-// });
+describe('Babel Generator', () => {
+    test('babelrc file', function () {
+        return helpers.run(path.join(__dirname, '../index.js'))
+            .withOptions({
+                react: false
+            })
+            .then(function () {
+                assert.file('.babelrc');
+                assert.noFileContent('.babelrc', 'react-loadable/babel');
+                assert.noFileContent('.babelrc', '@babel/preset-react');
+            });
+    });
 
-// todo test packages instaliied in app
-// });
+    test('babelrc file with react', function () {
+        return helpers.run(path.join(__dirname, '../index.js'))
+            .withOptions({
+                react: true,
+                loadable: true
+            })
+            .then(function () {
+                assert.file('.babelrc');
+                assert.fileContent('.babelrc', 'react-loadable/babel');
+                assert.fileContent('.babelrc', '@babel/preset-react');
+            });
+    });
+});

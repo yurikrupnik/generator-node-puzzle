@@ -4,7 +4,7 @@ module.exports = class AssetsGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
-        this.option('path', {
+        this.option('destination', {
             type: String,
             required: false,
             desc: 'Destination path',
@@ -13,9 +13,10 @@ module.exports = class AssetsGenerator extends Generator {
     }
 
     writing() {
+        const { destination } = this.options;
         this.fs.copy(
             this.templatePath(),
-            this.destinationPath(this.options.path),
+            this.destinationPath(destination)
         );
     }
 };

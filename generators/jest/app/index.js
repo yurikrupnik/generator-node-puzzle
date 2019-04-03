@@ -104,6 +104,6 @@ module.exports = class JestGenerator extends Generator {
     }
 
     install() {
-        // this._installDevPackages();
+        this._installDevPackages();
     }
 };

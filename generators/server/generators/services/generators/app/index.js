@@ -1,6 +1,5 @@
 const Generator = require('yeoman-generator/lib');
-const basename = require('path').basename;
-var mkdirp = require('mkdirp');
+const questions = require('./questions');
 
 module.exports = class ServicesGenerator extends Generator {
     constructor(args, opts) {
@@ -42,6 +41,10 @@ module.exports = class ServicesGenerator extends Generator {
         });
     }
 
+    async prompting() {
+        this.props = await this.prompt(questions);
+    }
+
     // configuring() {
     //     // this._buildCodeSrcFolder();
     //     this.config.set({
@@ -52,7 +55,8 @@ module.exports = class ServicesGenerator extends Generator {
     // }
 
     writing() {
-        const { path, port, db, auth, io, oauth } = this.options;
+        const { db, auth, io, oauth } = this.props;
+        const { path, port } = this.options;
         this.fs.copyTpl(
             this.templatePath(),
             this.destinationPath(path),

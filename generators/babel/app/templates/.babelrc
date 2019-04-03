@@ -1,0 +1,19 @@
+{
+  "presets": [
+    ["@babel/preset-env", {
+      "targets": {
+        "node": "current"
+      }
+    }],
+<%_ if(react) { _%>
+    "@babel/preset-react"
+<%_ } _%>
+  ],
+  "plugins": [
+    "@babel/plugin-syntax-object-rest-spread",
+    "@babel/plugin-syntax-dynamic-import",
+<%_ if(react) { _%>
+    "react-loadable/babel"
+<%_ } _%>
+  ]
+}

@@ -12,6 +12,13 @@ module.exports = class ReactGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
+        this.option('destinationPath', {
+            type: String,
+            required: false,
+            desc: 'Destination path of a files',
+            default: 'src'
+        });
+
         this.option('css', {
             type: Boolean,
             required: false,
@@ -21,43 +28,43 @@ module.exports = class ReactGenerator extends Generator {
 
         this.option('sass', {
             type: Boolean, // todo check that
-            required: Boolean,
-            desc: 'Include sass files',
+            required: false,
+            desc: 'Include sass support',
             default: false
         });
 
         this.option('ssr', {
             type: Boolean,
-            required: Boolean,
-            desc: 'Include server side rendering',
+            required: false,
+            desc: 'Include srr support',
             default: false
         });
 
-        this.option('path', {
-            type: String,
+        this.option('loadable', {
+            type: Boolean,
             required: false,
-            desc: 'Destination path of a files',
-            default: ''
+            desc: 'Include webpack',
+            default: false
         });
     }
 
     configuring() {
-        // this.config.set({
-        // extentions: '.jsx',
-        // sos: 'yes'
-        // });
+        this.composeWith(require.resolve('../../../../../webpack/app'), {
+            type: 'client',
+            react: true,
+            extensions: '.jsx',
+            sass: this.options.sass,
+            destinationPath: this.options.destinationPath,
+            loadable: this.options.loadable
+        });
     }
 
     writing() {
-        const { srr, path } = this.options;
-        const { promptValues } = this.config.getAll();
+        const { srr, destinationPath } = this.options;
         this.fs.copyTpl(
             this.templatePath(),
-            this.destinationPath(path),
-            {
-                srr: (promptValues && promptValues.ssr) || srr,
-
-            }
+            this.destinationPath(destinationPath),
+            { srr }
         );
     }
 
@@ -73,45 +80,12 @@ module.exports = class ReactGenerator extends Generator {
 
     _installDevPackages() {
         this.npmInstall([
-            '@babel/preset-react',
-            'eslint-plugin-jsx-a11y',
-            'eslint-plugin-react',
             'react-testing-library'
         ], {'save-dev': true});
     }
 
     install() {
-        // this._installPackages();
-        // this._installDevPackages();
-    }
-
-    conflicts() { // todo test
-        const lint = this.fs.readJSON(this.destinationPath('.eslintrc'));
-        const babel = this.fs.readJSON(this.destinationPath('.babelrc'));
-        if (lint) {
-            this.fs.extendJSON(this.destinationPath('.eslintrc'), {
-                rules: {
-                    'react/jsx-indent': [2, 4], // personal
-                    'react/jsx-indent-props': 0, // personal
-                    'jsx-a11y/anchor-is-valid': ['error', {
-                        'components': ['Link'],
-                        'specialLink': ['to'],
-                        'aspects': ['noHref', 'invalidHref', 'preferButton']
-                    }]
-                },
-                'extends': ['airbnb'] // overwrites arrays
-            });
-        }
-
-        if (babel) { // todo test
-            this.fs.extendJSON(this.destinationPath('.babelrc'), {
-                presets: babel.presets.concat('@babel/preset-react'),
-                plugins: babel.plugins.concat('react-loadable/babel')
-            });
-        }
-    }
-
-    end() {
-        this.log(`You have finished building ReactGenerator.`);
+        this._installPackages();
+        this._installDevPackages();
     }
 };

@@ -1,5 +1,5 @@
 var Generator = require('yeoman-generator/lib');
-// var Webpack = require('../webpack/app');
+var Webpack = require('../../../../../webpack/app');
 // var path = require('path');
 // var webpack = require('../webpack/app');
 // var G = require('generator-webpack-mussia');
@@ -48,13 +48,18 @@ module.exports = class VueGenerator extends Generator {
     }
 
     configuring() {
-        // console.log('this.options', this.options);
-        // console.log('this.props', this.props);
-        //
-        // this.config.set({
-        //     yebla: 'as'
-        // });
-        // console.log('this.props', this.config);
+        this.composeWith(require.resolve('../../../../../webpack/app'), {
+            type: 'client',
+            vue: true,
+            // extensions: '.jsx',
+            sass: this.options.sass,
+            destinationPath: this.options.destinationPath,
+            loadable: this.options.loadable
+        });
+        this.config.set({
+            extensions: '.vue',
+            vue: true
+        });
     }
 
     writing() {

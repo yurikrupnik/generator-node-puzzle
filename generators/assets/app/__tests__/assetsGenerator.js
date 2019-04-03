@@ -7,7 +7,7 @@ const {
     test
 } = global;
 
-describe('assets generator', () => {
+describe('Assets generator', () => {
     test('assets generator default options', function () {
         return helpers.run(path.join(__dirname, '../index.js'))
             .withOptions({})
@@ -19,13 +19,13 @@ describe('assets generator', () => {
     test('assets generate with path option', function () {
         return helpers.run(path.join(__dirname, '../index.js'))
             .withOptions({
-                path: 'src/assets'
+                destination: 'lol/d'
             })
             .then(function () {
-                assert.file('src/assets');
-                assert.file('src/assets/download.jpeg');
-                assert.file('src/assets/IF-pin1.png');
-                assert.file('src/assets/favicon.ico');
+                assert.file('lol/d');
+                assert.file('lol/d/download.jpeg');
+                assert.file('lol/d/IF-pin1.png');
+                assert.file('lol/d/favicon.ico');
             });
     });
 });

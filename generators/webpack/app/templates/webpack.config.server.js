@@ -15,7 +15,7 @@ module.exports = (env, argv) => {
     return {
         context: path.resolve(__dirname, 'src'),
         resolve: {
-            extensions: ['.json', '.js', '.jsx', '.css', '.scss'] // todo
+            extensions: ['.json', '.js', <%= sass && '.jsx' %>, '.css', <%= sass && '.scss' %>] // todo
         },
         target: 'node', // in order to ignore built-in modules like path, fs, etc.
         node: false,

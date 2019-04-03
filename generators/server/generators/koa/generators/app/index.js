@@ -20,26 +20,26 @@ module.exports = class KoaGenerator extends Generator {
             default: 5000
         });
 
-        this.option('db', {
-            type: Boolean,
-            required: false,
-            desc: 'Include Database',
-            default: false
-        });
-
-        this.option('io', {
-            type: Boolean,
-            required: false,
-            desc: 'Include socket.io',
-            default: false
-        });
-
-        this.option('oauth', { // todo check array values
-            type: String,
-            // required: false,
-            // desc: 'Include oauth services',
-            // default: ''
-        });
+        // this.option('db', {
+        //     type: Boolean,
+        //     required: false,
+        //     desc: 'Include Database',
+        //     default: false
+        // });
+        //
+        // this.option('io', {
+        //     type: Boolean,
+        //     required: false,
+        //     desc: 'Include socket.io',
+        //     default: false
+        // });
+        //
+        // this.option('oauth', { // todo check array values
+        //     type: String,
+        //     // required: false,
+        //     // desc: 'Include oauth services',
+        //     // default: ''
+        // });
     }
 
     // configuring() {

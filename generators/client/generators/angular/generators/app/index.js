@@ -48,13 +48,10 @@ module.exports = class VueGenerator extends Generator {
     }
 
     configuring() {
-        // console.log('this.options', this.options);
-        // console.log('this.props', this.props);
-        //
-        // this.config.set({
-        //     yebla: 'as'
-        // });
-        // console.log('this.props', this.config);
+        this.config.set({
+            // extensions: '.vue',
+            angular: true
+        });
     }
 
     writing() {

@@ -3,36 +3,37 @@ const Generator = require('yeoman-generator/lib');
 module.exports = class Babel extends Generator {
     constructor(args, opts) {
         super(args, opts);
-    }
 
-    writing() {
-        const defaultBabelConfig = {
-            'presets': [
-                ['@babel/preset-env', {
-                    'targets': {
-                        'node': 'current'
-                    }
-                }]
-            ],
-            'plugins': [
-                '@babel/plugin-syntax-object-rest-spread',
-                "@babel/plugin-syntax-dynamic-import"
-            ]
-
-        };
-        this.fs.writeJSON(this.destinationPath('.babelrc'), defaultBabelConfig);
+        this.option('react', {
+            type: Boolean,
+            required: false,
+            desc: 'Include React support',
+            default: false
+        });
     }
 
     _installDevPackages() {
+        const { react } = this.options;
         this.npmInstall([
             '@babel/core',
             '@babel/plugin-syntax-object-rest-spread',
             "@babel/plugin-syntax-dynamic-import",
-            '@babel/preset-env'
-        ], { 'save-dev': true });
+            '@babel/preset-env',
+            'babel-loader'
+        ].concat(react ? [
+            '@babel/preset-react'
+        ]: []), { 'save-dev': true });
+    }
+
+    writing() {
+        this.fs.copyTpl(
+            this.templatePath('.babelrc'),
+            this.destinationPath('.babelrc'),
+            this.options
+        );
     }
 
     install() {
-        // this._installDevPackages();
+        this._installDevPackages();
     }
 };

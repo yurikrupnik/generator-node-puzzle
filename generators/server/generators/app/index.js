@@ -30,22 +30,23 @@ module.exports = class ServerGenerator extends Generator {
         const answers = await this.prompt(questions);
         const { db, io, auth, oauth, serverFramework } = answers;
         if (serverFramework === 'koa') {
-            this.composeWith(require.resolve('../koa/generators/app'),{
+            const s = this.composeWith(require.resolve('../koa/generators/app'),{
                 path,
                 port,
-                db,
-                io,
-                auth,
-                oauth
+                // db,
+                // io,
+                // auth,
+                // oauth
             });
+
         } else if (serverFramework === 'express') {
             this.composeWith(require.resolve('../express/generators/app'), {
                 path,
                 port,
-                db,
-                io,
-                auth,
-                oauth
+                // db,
+                // io,
+                // auth,
+                // oauth
             });
         }
     }
@@ -60,7 +61,7 @@ module.exports = class ServerGenerator extends Generator {
     }
 
     install() {
-        // this._handleServerDevDependencies();
+        this._handleServerDevDependencies();
     }
 
 };
