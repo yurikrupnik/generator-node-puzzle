@@ -11,12 +11,10 @@ module.exports = class ClientGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
-        this.types = ['react', 'vue', 'angular'];
-
-        this.option('fullstack', {
-            type: Boolean,
+        this.option('type', {
+            type: String,
             required: false,
-            default: false,
+            default: 'client',
             desc: 'Include both client and server projects'
         });
 
@@ -40,7 +38,7 @@ module.exports = class ClientGenerator extends Generator {
             {
                 type: 'list',
                 name: 'viewEngine',
-                message: 'Choose client side library/framework',
+                message: 'Choose client side library',
                 choices: [
                     {
                         value: 'react',
@@ -60,14 +58,7 @@ module.exports = class ClientGenerator extends Generator {
             {
                 type: 'confirm',
                 name: 'sass',
-                message: 'Would you like to use SASS to compile CSS',
-                default: true,
-                store: true
-            },
-            {
-                type: 'confirm',
-                name: 'loadable',
-                message: 'Would you like to use code with dynamic import',
+                message: 'Would you like to use SASS to compile to CSS',
                 default: true,
                 store: true
             }
@@ -77,27 +68,27 @@ module.exports = class ClientGenerator extends Generator {
     writing() {
         const { props, options } = this;
         const { sass, loadable, viewEngine } = props;
-        const { destinationPath, fullstack } = options;
+        const { destinationPath, type } = options;
         if (viewEngine === 'react') {
             this.composeWith(require.resolve('../react/generators/app'), {
                 sass,
                 destinationPath,
                 loadable,
-                fullstack
+                type
             });
         } else if (viewEngine === 'vue') {
             this.composeWith(require.resolve('../vue/generators/app'), {
                 sass,
                 destinationPath,
                 loadable,
-                fullstack
+                type
             });
         } else if (viewEngine === 'angular') {
             this.composeWith(require.resolve('../angular/generators/app'), {
                 sass,
                 destinationPath,
                 loadable,
-                fullstack
+                type
             });
         }
     }

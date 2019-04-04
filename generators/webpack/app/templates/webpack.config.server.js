@@ -11,17 +11,29 @@ const filename = 'server.js';
 module.exports = (env, argv) => {
     const isProd = env ? !!env.prod : false;
     const isDebug = env ? !!env.debug : false;
-    isProd ? dotenv.config() : require('./src/config');
+    isProd ? dotenv.config() : require('./<%= destinationPath %>/config');
     return {
-        context: path.resolve(__dirname, 'src'),
+        context: path.resolve(__dirname, '<%= destinationPath %>'),
         resolve: {
-            extensions: ['.json', '.js', <%= sass && '.jsx' %>, '.css', <%= sass && '.scss' %>] // todo
+            extensions: [
+                '.json',
+                <%_ if(react) { _%>
+                '.jsx',
+                <%_ } _%>
+                <%_ if(isFullstack) { _%>
+                '.css',
+                <%_ } _%>
+                <%_ if(sass) { _%>
+                '.scss',
+                <%_ } _%>
+                '.js'
+            ],
         },
         target: 'node', // in order to ignore built-in modules like path, fs, etc.
         node: false,
         externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
         devtool: 'source-map',
-        entry: './server.jsx',
+        entry: './server.jsx', // todo
         output: {
             path: path.resolve(__dirname, 'dist'),
             chunkFilename: '[name].js',
@@ -31,18 +43,22 @@ module.exports = (env, argv) => {
         module: {
             rules: [
                 {
-                    test: /\.(js|jsx)$/, // todo
+                    test: /\.(js<%= react ? '|jsx' : '' _%>)$/,
                     use: ['babel-loader', 'eslint-loader'],
                 },
-                { // todo
-                    test: /\.(css|scss)$/, // todo
+                <%_ if(isFullstack) { _%>
+                {
+                    test: /\.(css<%= sass ? '|scss' : '' _%>)$/,
                     use: [
                         'css-loader',
-                        {// todo
-                            loader: 'sass-loader'
+                        <%_ if(sass) { _%>
+                        {
+                        loader: 'sass-loader'
                         }
+                        <%_ } _%>
                     ]
                 },
+                <%_ } _%>
                 {
                     test: /\.(png|jpg|gif)$/,
                     use: [
@@ -71,6 +87,6 @@ module.exports = (env, argv) => {
                 watch: path.resolve(__dirname, 'dist', filename),
                 verbose: true
             }) : () => {}
-        ],
+        ]
     };
 };

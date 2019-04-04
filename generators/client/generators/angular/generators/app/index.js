@@ -11,13 +11,20 @@ var path = require('path');
 module.exports = class VueGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
-        // this.props.name = path.basename(process.cwd())
-        // this.option('type', {
-        //     type: String,
-        //     required: false,
-        //     desc: 'Project name to be included in the package.json',
-        //     default: path.basename(process.cwd())
-        // });
+
+        this.option('type', {
+            type: String,
+            required: false,
+            desc: 'Project type',
+            default: 'client'
+        });
+
+        this.option('destinationPath', {
+            type: String,
+            required: false,
+            desc: 'Destination path of a files',
+            default: 'src'
+        });
 
         this.option('css', {
             type: Boolean,
@@ -27,9 +34,9 @@ module.exports = class VueGenerator extends Generator {
         });
 
         this.option('sass', {
-            type: String,
-            required: Boolean,
-            desc: 'Include sass files',
+            type: Boolean, // todo check that
+            required: false,
+            desc: 'Include sass support',
             default: false
         });
 
@@ -48,9 +55,16 @@ module.exports = class VueGenerator extends Generator {
     }
 
     configuring() {
-        this.config.set({
-            // extensions: '.vue',
-            angular: true
+        // this.config.set({
+        //     // extensions: '.vue',
+        //     angular: true
+        // });
+        this.composeWith(require.resolve('../../../../../webpack/app'), {
+            type: this.options.type,
+            angular: true,
+            sass: this.options.sass,
+            destinationPath: this.options.destinationPath,
+            loadable: this.options.loadable
         });
     }
 
@@ -70,9 +84,5 @@ module.exports = class VueGenerator extends Generator {
 
     install() {
         this.installPackages();
-    }
-
-    end() {
-        this.log(`You have finished building Vue.`);
     }
 };

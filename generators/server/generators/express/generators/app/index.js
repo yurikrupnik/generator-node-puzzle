@@ -6,11 +6,33 @@ module.exports = class ExpressGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
-        this.option('path', {
+
+        this.option('type', {
+            type: String,
+            required: false,
+            desc: 'Project type',
+            default: 'server'
+        });
+
+        this.option('destinationPath', {
             type: String,
             required: false,
             desc: 'Destination path of a files',
-            default: ''
+            default: 'src'
+        });
+
+        this.option('sass', {
+            type: Boolean,
+            required: false,
+            desc: 'Include sass support',
+            default: false
+        });
+
+        this.option('ssr', {
+            type: Boolean,
+            required: false,
+            desc: 'Support server side rendering',
+            default: false
         });
 
         this.option('port', {
@@ -42,17 +64,33 @@ module.exports = class ExpressGenerator extends Generator {
         });
     }
 
+    configuring() {
+        this.composeWith(require.resolve('../../../../../webpack/app'), {
+            type: 'server',
+            sass: this.options.sass,
+            ssr: this.options.ssr,
+            destinationPath: this.options.destinationPath,
+            // loadable: this.options.loadable
+        });
+        // this._buildCodeSrcFolder();
+        // this.config.set({
+        //     //     src: this.options.codeSrc,
+        //     componentDestination: this.options.codeSrc + 'components',
+        //     // apiDestination: this.options.codeSrc + 'api'
+        // });
+    }
 
     writing() {
-        const { path, port, db, auth, io, oauth } = this.options;
+        const { destinationPath, port, db, auth, io, oauth } = this.options;
         // console.log('oauth', oauth);
 
         this.fs.copyTpl(
             this.templatePath(),
-            this.destinationPath(path),
+            this.destinationPath(destinationPath),
             {
                 port,
                 db,
+                // path: 'd',
                 io,
                 auth,
                 oauth
@@ -63,6 +101,9 @@ module.exports = class ExpressGenerator extends Generator {
     install() {
         // console.log('App this.config.getAll()', this.config.getAll());
 
-        // this.npmInstall();
+        this.npmInstall([
+            'express',
+            'morgan'
+        ]);
     }
 };

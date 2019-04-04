@@ -56,12 +56,12 @@ module.exports = class App extends Generator {
 
         if (projectType === 'fullstack') {
             this.composeWith(require.resolve('../client/generators/app'), {
-                fullstack: true,
+                type: projectType,
                 destinationPath,
                 ssr
             });
             this.composeWith(require.resolve('../server/generators/app'), {
-                fullstack: true,
+                type: projectType,
                 destinationPath,
                 port,
                 ssr
@@ -69,11 +69,13 @@ module.exports = class App extends Generator {
         }
         if (projectType === 'client') {
             this.composeWith(require.resolve('../client/generators/app'), {
+                type: projectType,
                 destinationPath,
                 ssr
             });
         } else if (projectType === 'server') {
             this.composeWith(require.resolve('../server/generators/app'),{
+                type: projectType,
                 destinationPath,
                 port,
                 ssr

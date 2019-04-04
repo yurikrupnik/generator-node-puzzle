@@ -1,52 +1,50 @@
 var Generator = require('yeoman-generator/lib');
-var path = require('../express/generators/app');
-// var G = require('generator-webpack-mussia');
-
-// var reduce = require('lodash.reduce');
 const questions = require('./questions');
-// const utils = require('../app/utils'); // todo fix file system in project
 
 module.exports = class ServerGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
-        this.option('path', {
+        this.option('type', {
+            type: String,
+            required: false,
+            default: 'server',
+            desc: 'Include both client and server projects'
+        });
+
+        this.option('destinationPath', {
             type: String,
             required: false,
             desc: 'Destination path of a files',
-            default: ''
+            default: 'src'
         });
 
         this.option('port', {
             type: Number,
             required: false,
-            desc: 'Destination path of a files',
+            desc: 'Port to run app on',
             default: 5000
         });
     }
 
     async prompting() {
-        const { path, port } = this.options;
+        const { destinationPath, port, type } = this.options;
         const answers = await this.prompt(questions);
-        const { db, io, auth, oauth, serverFramework } = answers;
+        const { serverFramework, ssr } = answers;
         if (serverFramework === 'koa') {
-            const s = this.composeWith(require.resolve('../koa/generators/app'),{
-                path,
+            this.composeWith(require.resolve('../koa/generators/app'),{
+                destinationPath,
                 port,
-                // db,
-                // io,
-                // auth,
-                // oauth
+                type,
+                ssr
             });
 
         } else if (serverFramework === 'express') {
             this.composeWith(require.resolve('../express/generators/app'), {
-                path,
+                destinationPath,
                 port,
-                // db,
-                // io,
-                // auth,
-                // oauth
+                type,
+                ssr
             });
         }
     }

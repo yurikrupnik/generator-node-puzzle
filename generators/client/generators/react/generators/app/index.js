@@ -12,6 +12,13 @@ module.exports = class ReactGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
+        this.option('type', {
+            type: String,
+            required: false,
+            desc: 'Project type',
+            default: 'client'
+        });
+
         this.option('destinationPath', {
             type: String,
             required: false,
@@ -33,24 +40,27 @@ module.exports = class ReactGenerator extends Generator {
             default: false
         });
 
-        this.option('ssr', {
-            type: Boolean,
-            required: false,
-            desc: 'Include srr support',
-            default: false
-        });
+        // this.option('ssr', {
+        //     type: Boolean,
+        //     required: false,
+        //     desc: 'Include srr support',
+        //     default: false
+        // });
 
-        this.option('loadable', {
-            type: Boolean,
-            required: false,
-            desc: 'Include webpack',
-            default: false
-        });
+        // this.option('loadable', {
+        //     type: Boolean,
+        //     required: false,
+        //     desc: 'Include webpack',
+        //     default: false
+        // });
     }
 
     configuring() {
+        // console.log('React type', this.options.type);
+
         this.composeWith(require.resolve('../../../../../webpack/app'), {
-            type: 'client',
+            type: this.options.type,
+            // ssr: this.options.ssr,
             react: true,
             extensions: '.jsx',
             sass: this.options.sass,
@@ -74,7 +84,8 @@ module.exports = class ReactGenerator extends Generator {
             'prop-types',
             'react-dom',
             'react-router',
-            'react-router-dom'
+            'react-router-dom',
+            'react-loadable'
         ]);
     }
 

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title><%%- title %></title>
+</head>
+<body>
+<%_ if(ssr) { _%>
+<script>
+    window.appData = <%%= JSON.stringify(appData) %>
+</script>
+<div id="root"><%%- html %></div>
+<%_ } _%>
+ <%_ if(!ssr) { _%>
+    <div id="root"></div>
+<%_ } _%>
+</body>
+</html>

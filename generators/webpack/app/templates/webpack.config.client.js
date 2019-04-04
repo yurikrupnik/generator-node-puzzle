@@ -1,40 +1,44 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const dotenv = require('dotenv');
-<%_ if(react) { _%>
+<%_ if(vue) { _%>
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 <%_ } _%>
 
 module.exports = env => {
     const isProd = env ? !!env.prod : false;
     const isDebug = env ? !!env.debug : false;
-    const config = isProd ? dotenv.config() : require('./src/config'); // eslint-disable-line global-require
+    const config = isProd ? dotenv.config() : require('./<%= destinationPath %>/config'); // eslint-disable-line global-require
 
     return {
-        context: path.resolve(__dirname, <%= 'destinationPath' %>), // todo
+        context: path.resolve(__dirname, '<%= destinationPath %>'),
         optimization: {
             minimizer: [
-                new UglifyJsPlugin({ // todo
-                    cache: true,
-                    parallel: true,
-                    sourceMap: true // set to true if you want JS source maps
-                }),
+                new TerserPlugin(),
                 new OptimizeCSSAssetsPlugin({})
             ]
         },
         target: 'web',
         resolve: {
-            extensions: ['.json', '.js', <%= react ? "'.jsx'" : "" _%>, '.css', <%= sass ? "'.scss'": "'''" _%>] // todo
-            <%_ if(react) { _%>
+            extensions: [
+                '.json',
+                '.js',
+                <%_ if(react) { _%>
+                '.jsx',
+                <%_ } _%>
+                '.css' <%_ if(sass) { _%>,
+                '.scss'
+                <%_ } _%>
+            ] <%_ if(vue) { _%>,
             alias: {
-                vue: 'vue/dist/vue.js' // todo
+                vue: 'vue/dist/vue.js'
             }
-            <%_ } _%>
+            <%_ } %>
         },
         devtool: isProd ? 'source-map' : 'eval-cheap-module-source-map',
         entry: './client.jsx', // todo
@@ -48,19 +52,19 @@ module.exports = env => {
         module: {
             rules: [
                 {
-                    test: /\.(js|jsx)$/, // todo
+                    test: /\.(js<%= react ? '|jsx' : '' _%>)$/,
                     use: ['babel-loader', 'eslint-loader'],
                     exclude: /node_modules/,
                 },
-                <%_ if(react) { _%>
+                <%_ if(vue) { _%>
                 {
-                    test: /\.vue$/, // todo
+                    test: /\.vue$/,
                     loader: 'vue-loader'
                 },
                 <%_ } _%>
-                <%_ if(react) { _%>
+                <%_ if(angular) { _%>
                 {
-                    test: /\.(html)$/, // todo
+                    test: /\.(html)$/,
                     use: {
                         loader: 'html-loader',
                         options: {
@@ -69,9 +73,8 @@ module.exports = env => {
                     }
                 },
                 <%_ } _%>
-
                 {
-                    test: /\.(css|scss)$/, // todo
+                    test: /\.(css<%= sass ? '|scss' : '' _%>)$/,
                     use: [
                         'css-hot-loader',
                         !isProd ? 'style-loader' : MiniCssExtractPlugin.loader,
@@ -82,19 +85,17 @@ module.exports = env => {
                                 localIdentName: isProd ? '[hash:base64]' : '[local]--[hash:base64:5]'
                             }
                         },
-                        <%_ if(react) { _%>
-                        { // todo
+                        <%_ if(sass) { _%>
+                        {
                             loader: 'sass-loader'
                         }
                         <%_ } _%>
                     ],
                 },
-                <%_ if(react) { _%>
-                { // todo
+                {
                     test: /\.ejs$/,
                     use: 'raw-loader'
                 },
-                <%_ } _%>
                 {
                     test: /\.(png|jpg|gif)$/,
                     use: [
@@ -111,9 +112,9 @@ module.exports = env => {
                 'process.env.DEBUG': JSON.stringify(isDebug),
                 'process.env.PORT': JSON.stringify(process.env.PORT)
             }),
-            new HtmlWebpackPlugin({ // todo
-                template: 'index.ejs', // todo
-                filename: 'index.ejs', // todo
+            new HtmlWebpackPlugin({
+                template: 'index.ejs',
+                filename: 'index.ejs',
                 favicon: 'assets/favicon.ico',
                 meta: {
                     charset: 'UTF-8',
@@ -133,13 +134,18 @@ module.exports = env => {
             new VueLoaderPlugin()
         ],
         devServer: { // when not prod - NODE_ENV_DOCKER taken from docker-compose env
-            // todo client and fullstack
-            port: config.port + 1,
             open: true,
+            <%_ if(!isFullstack) { _%>
+            index: 'index.ejs',
+            historyApiFallback: true
+            <%_ } _%>
+            <%_ if(isFullstack) { _%>
+            port: config.port + 1,
             host: process.env.NODE_ENV_DOCKER ? '0.0.0.0' : 'localhost',
             proxy: {
                 '/': { target: `http://localhost:${config.port}` }
             }
+            <%_ } _%>
         }
     };
 };
