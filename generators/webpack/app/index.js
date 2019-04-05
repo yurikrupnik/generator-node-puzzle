@@ -195,7 +195,7 @@ module.exports = class Webpack extends Generator {
             'start:client': 'webpack --c webpack.config.client.js',
             'start:server': 'webpack -w --c webpack.config.server.js',
             'start:mongo': 'docker run --rm -d -p 27017:27017 --name mongo mongo',
-            'build': 'run-p build:server build:client',
+            'build': 'npm-run-all run-p build:server build:client',
             'build:client': 'webpack --env.prod --config webpack.config.client.js',
             'build:server': 'webpack --env.prod --config webpack.config.server.js',
             'clean': 'rimraf dist/',
@@ -211,16 +211,29 @@ module.exports = class Webpack extends Generator {
         return {
             name: name,
             version: '0.0.0',
-            engines: {node: ">=6"},
-            scripts,
+            description: '',
             main: `${destinationPath}/${type === 'fullstack' ? 'server' : 'index'}.${react ? 'jsx' : 'js'}`,
+            scripts,
+            repository: {
+                type: '',
+                url: ''
+            },
             dependencies: {},
-            devDependencies: {}
+            devDependencies: {},
+            engines: {node: ">=6"}
         };
     }
 
     _createPackage() {
-        this.fs.extendJSON(this.destinationPath('package.json'), this._getDefaultPackage());
+        const { type } = this.options;
+        if (type === 'fullstack') {
+            const pkg = this.fs.readJSON('package.json');
+            if (!pkg) {
+                this.fs.extendJSON(this.destinationPath('package.json'), this._getDefaultPackage());
+            }
+        } else {
+            this.fs.extendJSON(this.destinationPath('package.json'), this._getDefaultPackage());
+        }
     }
 
     _installDevPackages() {
@@ -229,7 +242,8 @@ module.exports = class Webpack extends Generator {
             'webpack-cli',
             'webpack-bundle-analyzer',
             'npm-run-all',
-            'file-loader'
+            'file-loader',
+            'eslint-loader'
         ], {'save-dev': true});
 
     }
@@ -254,6 +268,15 @@ module.exports = class Webpack extends Generator {
         }
     }
 
+    conflict() {
+        const { destinationPath, css } = this.options;
+        this._createPackage();
+        this.composeWith(require.resolve('../../jest/app'), {
+            destinationPath,
+            css
+        });
+    }
+
     _handleServerDevDependencies() {
         if (this.options.type === 'server' || this.options.type === 'fullstack') {
             this.npmInstall([
@@ -266,13 +289,11 @@ module.exports = class Webpack extends Generator {
     }
 
     install() {
-        this._createPackage();
         this._handleClientWebpackPackages();
         this._handleServerDevDependencies();
         this._installDevPackages();
     }
 
     end() {
-        this.composeWith(require.resolve('../../jest/app'));
     }
 };

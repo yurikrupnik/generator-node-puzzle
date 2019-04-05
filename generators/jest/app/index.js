@@ -4,7 +4,7 @@ module.exports = class JestGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
-        this.option('path', {
+        this.option('destinationPath', {
             type: String,
             required: false,
             desc: 'Destination path',
@@ -41,11 +41,45 @@ module.exports = class JestGenerator extends Generator {
     }
 
     writing() {
-        const { path, e2ePath, e2e, setup, css } = this.options;
+        const { e2ePath, e2e, setup} = this.options;
+
+        if (e2e) {
+            this.fs.copyTpl(
+                this.templatePath('e2e'),
+                this.destinationPath(e2ePath)
+            );
+        }
+        if (setup) {
+            this.fs.copyTpl(
+                this.templatePath('jestsetup.js'),
+                this.destinationPath('jestsetup.js')
+            );
+        }
+    }
+
+    _installDevPackages() {
+        const {e2e} = this.options;
+        this.npmInstall([
+            'jest',
+        ], {'save-dev': true});
+
+        if (e2e) {
+            this.npmInstall([
+                'puppeteer',
+            ], {'save-dev': true});
+        }
+    }
+
+    install() {
+        this._installDevPackages();
+    }
+
+    _updatePackageJson() {
+        const {destinationPath, e2ePath, e2e, setup, css} = this.options;
         const scripts = {
-            'test': `jest ${path}/`,
-            'test:watch': `jest ${path}/ --watch`,
-            'test:coverage': `jest ${path}/ --coverage`
+            'test': `jest ${destinationPath}/`,
+            'test:watch': `jest ${destinationPath}/ --watch`,
+            'test:coverage': `jest ${destinationPath}/ --coverage`
         };
 
         const e2eScripts = {
@@ -72,38 +106,13 @@ module.exports = class JestGenerator extends Generator {
             this.destinationPath('package.json'),
             {
                 scripts: Object.assign({}, scripts, e2e ? e2eScripts : {}),
-                jest: jestConfig
+                jest: jestConfig,
             }
         );
-
-        if (e2e) {
-            this.fs.copyTpl(
-                this.templatePath('e2e'),
-                this.destinationPath(e2ePath)
-            );
-        }
-        if (setup) {
-            this.fs.copyTpl(
-                this.templatePath('jestsetup.js'),
-                this.destinationPath('jestsetup.js')
-            );
-        }
     }
 
-    _installDevPackages() {
-        const { e2e } = this.options;
-        this.npmInstall([
-            'jest',
-        ], { 'save-dev': true });
-
-        if (e2e) {
-            this.npmInstall([
-                'puppeteer',
-            ], { 'save-dev': true });
-        }
+    conflict() {
+        this._updatePackageJson();
     }
 
-    install() {
-        // this._installDevPackages();
-    }
 };

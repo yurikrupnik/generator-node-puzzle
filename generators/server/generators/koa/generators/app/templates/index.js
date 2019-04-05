@@ -10,7 +10,7 @@ import { databaseUrl, port }  from './config';
 
 const app = new Koa();
 
-app.keys = [process.env.SECRET];
+app.keys = [process.env.SECRET || 'ko'];
 app.use(logger());
 app.use(bodyParser());
 <% if (db) { _%>

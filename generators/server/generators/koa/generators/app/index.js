@@ -76,7 +76,7 @@ module.exports = class KoaGenerator extends Generator {
         this.composeWith(require.resolve('../../../../../webpack/app'), {
             type,
             sass: promptValues && promptValues.sass || sass,
-            css: css || promptValues.viewEngine,
+            css: css || promptValues && promptValues.viewEngine,
             destinationPath,
             ssr
         });

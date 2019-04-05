@@ -33,7 +33,7 @@ module.exports = (env, argv) => {
         node: false,
         externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
         devtool: 'source-map',
-        entry: './server.jsx', // todo
+        entry: './<%= isFullstack ? 'server' : 'index' _%>.<%= react ? 'jsx' : 'js' _%>',
         output: {
             path: path.resolve(__dirname, 'dist'),
             chunkFilename: '[name].js',

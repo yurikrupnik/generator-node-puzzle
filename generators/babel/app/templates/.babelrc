@@ -11,8 +11,7 @@
   ],
   "plugins": [
     "@babel/plugin-syntax-object-rest-spread",
-    "@babel/plugin-syntax-dynamic-import",
-<%_ if(react) { _%>
+    "@babel/plugin-syntax-dynamic-import" <%_ if(react) { _%>,
     "react-loadable/babel"
 <%_ } _%>
   ]

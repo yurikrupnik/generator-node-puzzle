@@ -41,7 +41,7 @@ module.exports = env => {
             <%_ } %>
         },
         devtool: isProd ? 'source-map' : 'eval-cheap-module-source-map',
-        entry: './client.jsx', // todo
+        entry: './<%= isFullstack ? 'client' : 'index' _%>.<%= react ? 'jsx' : 'js' _%>',
         output: {
             filename: '[name].js',
             chunkFilename: '[name].js',
@@ -130,8 +130,10 @@ module.exports = env => {
                 filename: !isProd ? '[name].css' : '[name].[hash].css',
                 chunkFilename: !isProd ? '[id].css' : '[id].[hash].css',
             }),
+            <%_ if(vue) { _%>
+            new VueLoaderPlugin(),
+            <%_ } _%>
             new BundleAnalyzerPlugin({}),
-            new VueLoaderPlugin()
         ],
         devServer: { // when not prod - NODE_ENV_DOCKER taken from docker-compose env
             open: true,

@@ -28,7 +28,7 @@ describe('webpack generator', () => {
 
                     }))
                 .then(function () {
-                    assert.file('config.js');
+                    assert.file('src/config.js');
                     // assert.file('as');
                     // assert.noFileContent('webpack.config.js', '.scss');
                     // assert.noFileContent('webpack.config.js', '.jsx');
@@ -41,10 +41,11 @@ describe('webpack generator', () => {
                     licenceMockPromp,
                     {
                         type: 'server',
+                        destinationPath: 'lol'
 
                     }))
                 .then(function () {
-                    assert.file('config.js');
+                    assert.file('lol/config.js');
                     // assert.noFileContent('webpack.config.js', '.scss');
                     // assert.noFileContent('webpack.config.js', '.jsx');
                 });
@@ -61,8 +62,8 @@ describe('webpack generator', () => {
 
                     }))
                 .then(function () {
-                    assert.file('config.server.js');
-                    assert.file('config.client.js');
+                    assert.file('webpack.config.server.js');
+                    assert.file('webpack.config.client.js');
                     // assert.file('as');
                     // assert.noFileContent('webpack.config.js', '.scss');
                     // assert.noFileContent('webpack.config.js', '.jsx');
