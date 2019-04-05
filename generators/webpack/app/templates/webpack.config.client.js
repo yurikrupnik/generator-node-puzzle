@@ -114,7 +114,7 @@ module.exports = env => {
             }),
             new HtmlWebpackPlugin({
                 template: 'index.ejs',
-                filename: 'index.ejs',
+                filename: 'index.<%= isFullstack ? 'esj' : 'html' _%>',
                 favicon: 'assets/favicon.ico',
                 meta: {
                     charset: 'UTF-8',
@@ -138,7 +138,7 @@ module.exports = env => {
         devServer: { // when not prod - NODE_ENV_DOCKER taken from docker-compose env
             open: true,
             <%_ if(!isFullstack) { _%>
-            index: 'index.ejs',
+            index: 'index.html',
             historyApiFallback: true
             <%_ } _%>
             <%_ if(isFullstack) { _%>

@@ -243,7 +243,8 @@ module.exports = class Webpack extends Generator {
             'webpack-bundle-analyzer',
             'npm-run-all',
             'file-loader',
-            'eslint-loader'
+            'eslint-loader',
+            'dotenv'
         ], {'save-dev': true});
 
     }
@@ -282,8 +283,7 @@ module.exports = class Webpack extends Generator {
             this.npmInstall([
                 'generate-json-webpack-plugin',
                 'nodemon-webpack-plugin',
-                'webpack-node-externals',
-                'dotenv',
+                'webpack-node-externals'
             ], { 'save-dev': true });
         }
     }

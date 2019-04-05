@@ -2,7 +2,7 @@ import Koa from 'koa';
 import Router from 'koa-router';
 import logger from 'koa-logger';
 import bodyParser from 'koa-bodyparser';
-import api from './api';
+// import api from './api';
 <% if (db) { _%>
 import db from './services/db';
 <%_ } _%>
@@ -21,19 +21,19 @@ route.get('/', (ctx, next) => {
     ctx.body = ['ssss'];
 });
 
-app.use(api);
-app.use(ctx => {
-    if (ctx.path === '/favicon.ico') return;
-    if (ctx.session.isNew) {
-        console.log('new');
-    } else {
-        console.log('old');
-    }
-    let n = ctx.session.views || 0;
-    ctx.session.views = ++n;
-    ctx.body = n + ' views';
-});
-
+// app.use(api);
+// app.use(ctx => {
+//     if (ctx.path === '/favicon.ico') return;
+//     if (ctx.session.isNew) {
+//         console.log('new');
+//     } else {
+//         console.log('old');
+//     }
+//     let n = ctx.session.views || 0;
+//     ctx.session.views = ++n;
+//     ctx.body = n + ' views';
+// });
+app.use(route.routes());
 app.listen(port, (err) => {
     if (err) {
         console.log('err', err); // eslint-disable-line no-console

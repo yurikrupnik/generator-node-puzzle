@@ -1,5 +1,8 @@
 {
   "parser": "babel-eslint",
+  "env": {
+    "es6": true
+  },
   "rules": {
     "indent": [2, 4],
     "comma-dangle": 0,
@@ -17,9 +20,6 @@
   "extends": [
 <%_ if(react) { _%>
     "airbnb"
-<% } else{ _%>
-    "eslint:recommended",
-    "plugin:node/recommended"
 <% } _%>
   ]
 }

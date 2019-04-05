@@ -102,7 +102,8 @@ module.exports = class KoaGenerator extends Generator {
         this.npmInstall([
             'koa',
             'koa-logger',
-            'koa-router'
+            'koa-router',
+            'koa-bodyparser'
         ]);
     }
 };
