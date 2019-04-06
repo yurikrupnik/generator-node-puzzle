@@ -13,7 +13,6 @@ describe('Eslint generator', () => {
             .then(function () {
                 assert.file('.eslintrc');
                 assert.fileContent('.eslintrc', '"parser": "babel-eslint"');
-                assert.fileContent('.eslintrc', 'eslint:recommended');
                 assert.noFileContent('.eslintrc', 'jsx-a11y');
                 // assert.noFileContent('.eslintrc', 'airbnb');
             });

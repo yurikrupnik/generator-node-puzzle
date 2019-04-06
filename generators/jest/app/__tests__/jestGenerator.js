@@ -42,7 +42,7 @@ describe('jest generator', () => {
         test('jest with different paths', function () {
             return helpers.run(path.join(__dirname, '../index'))
                 .withOptions({
-                    path: 'lol',
+                    destinationPath: 'lol',
                     e2ePath: 'mi',
                     css: true
                 })

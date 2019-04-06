@@ -19,7 +19,7 @@ describe('Assets generator', () => {
     test('assets generate with path option', function () {
         return helpers.run(path.join(__dirname, '../index.js'))
             .withOptions({
-                destination: 'lol/d'
+                destinationPath: 'lol/d'
             })
             .then(function () {
                 assert.file('lol/d');
