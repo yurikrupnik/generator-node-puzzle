@@ -58,14 +58,14 @@ module.exports = class JestGenerator extends Generator {
     }
 
     _installDevPackages() {
-        const {e2e} = this.options;
+        const { css, e2e } = this.options;
         this.npmInstall([
             'jest',
-        ], {'save-dev': true});
+        ].concat(css ? 'identity-obj-proxy' : ''), {'save-dev': true});
 
         if (e2e) {
             this.npmInstall([
-                'puppeteer',
+                // 'puppeteer',
             ], {'save-dev': true});
         }
     }

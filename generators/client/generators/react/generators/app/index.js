@@ -41,37 +41,38 @@ module.exports = class ReactGenerator extends Generator {
             sass: this.options.sass,
             destinationPath: this.options.destinationPath,
             css: this.options.css,
-            loadable: this.options.loadable
+            // loadable: this.options.loadable
         });
     }
 
     writing() {
-        const { srr, destinationPath, type } = this.options;
+        const { ssr, type, sass, destinationPath } = this.options;
+        // routes
+        this.fs.copy(
+            this.templatePath('routes'),
+            this.destinationPath(`${destinationPath}/routes`)
+        );
 
-        if (type === 'fullstack') {
-            this.fs.copyTpl(
-                this.templatePath('index.jsx'),
-                this.destinationPath(`${destinationPath}/client.jsx`),
-                { srr }
-            );
+        // components
+        this.fs.copy(
+            this.templatePath('components'),
+            this.destinationPath(`${destinationPath}/components`)
+        );
 
-            this.fs.copyTpl(
-                this.templatePath('routes'),
-                this.destinationPath(`${destinationPath}/routes`),
-                { srr }
-            );
-            this.fs.copyTpl(
-                this.templatePath('components'),
-                this.destinationPath(`${destinationPath}/components`),
-                { srr }
-            );
-        } else {
-            this.fs.copyTpl(
-                this.templatePath(),
-                this.destinationPath(destinationPath),
-                { srr }
-            );
-        }
+        // api
+        this.fs.copy(
+            this.templatePath('api'),
+            this.destinationPath(`${destinationPath}/api`)
+        );
+
+        this.fs.copyTpl(
+            this.templatePath('index.jsx'),
+            this.destinationPath(`${destinationPath}/${type === 'fullstack' ? 'client.jsx' : 'index.jsx'}`),
+            {
+                ssr,
+                sass
+            }
+        );
     }
 
     _installPackages() {

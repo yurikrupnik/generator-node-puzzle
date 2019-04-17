@@ -1,20 +1,16 @@
+import Dashboard from './Dashboard';
+import About from './About';
+
 export default [
     {
         path: '/',
-        component: () => {
-            return (
-                <div>hello</div>
-            );
-        },
-        key: 1
+        component: Dashboard,
+        key: 'dashboard',
+        exact: true
     },
     {
         path: '/about',
-        component: () => {
-            return (
-                <div>about</div>
-            );
-        },
-        key: 2
+        component: About,
+        key: 'about'
     }
-]
+];

@@ -25,14 +25,21 @@ module.exports = class ServerGenerator extends Generator {
             desc: 'Port to run app on',
             default: 5000
         });
+
+        this.option('ssr', {
+            type: Boolean,
+            required: false,
+            desc: 'Include server side rendering support',
+            default: false
+        });
     }
 
     async prompting() {
-        const { destinationPath, port, type } = this.options;
+        const {destinationPath, ssr, port, type} = this.options;
         const answers = await this.prompt(questions);
-        const { serverFramework, ssr } = answers;
+        const {serverFramework} = answers;
         if (serverFramework === 'koa') {
-            this.composeWith(require.resolve('../koa/generators/app'),{
+            this.composeWith(require.resolve('../koa/generators/app'), {
                 destinationPath,
                 port,
                 type,
@@ -48,18 +55,4 @@ module.exports = class ServerGenerator extends Generator {
             });
         }
     }
-
-    _handleServerDevDependencies() {
-        this.npmInstall([
-            'generate-json-webpack-plugin',
-            'nodemon-webpack-plugin',
-            'webpack-node-externals',
-            'dotenv'
-        ], { 'save-dev': true });
-    }
-
-    install() {
-        this._handleServerDevDependencies();
-    }
-
 };

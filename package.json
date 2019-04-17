@@ -53,6 +53,8 @@
   ],
   "dependencies": {
     "fs-extra": "^7.0.1",
+    "generator-babelrc": "^1.0.4",
+    "generator-eslinter": "^1.1.0",
     "generator-license": "^5.4.0",
     "lodash.reduce": "^4.6.0",
     "mkdirp": "^0.5.1",

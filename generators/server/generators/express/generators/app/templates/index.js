@@ -1,6 +1,12 @@
+import path from 'path';
 import express from 'express';
 import morgan from 'morgan';
 import { port<%= db ? ', databaseUrl ' : ' '%>} from './config';
+<% if (ssr) { _%>
+import render from './services/render';
+import App from './components/App';
+import routes from './routes';
+<%_ } _%>
 import api from './api';
 <% if (db) { _%>
 import db from './services/db';
@@ -14,14 +20,16 @@ import passport from './services/passport';
 
 const app = express();
 
-app.use(express.json(), express.urlencoded({ extended: false }));
+const assets = path.resolve(__dirname, 'assets');
 
+app.use(express.static(assets));
 app.use(morgan('dev'));
+app.use(express.json(), express.urlencoded({ extended: false }));
+<% if (ssr) { _%>
+app.set('view engine', 'ejs');
+app.set('views', assets);
+<%_ } _%>
 
-const route = express.Router();
-route.get('/', (req, res, next) => {
-    res.json(['u'])
-});
 <%_ if (db) { _%>
 app.use(db(databaseUrl));
 <%_ } _%>
@@ -29,7 +37,10 @@ app.use(db(databaseUrl));
 app.use(passport(app));
 <%_ } _%>
 app.use(api);
-app.use(route);
+<%_ if (ssr) { _%>
+app.use(render(<%= ssr ? "App, routes" : "" %>));
+<%_ } _%>
+// app.use(route);
 
 <%= io ? 'server(app)' : 'app' %>.listen(port, (err) => {
     if (err) {

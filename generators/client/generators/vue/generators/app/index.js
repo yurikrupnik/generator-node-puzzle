@@ -70,6 +70,10 @@ module.exports = class VueGenerator extends Generator {
         this.npmInstall([
             'vue'
         ]);
+        this.npmInstall([
+            'vue-loader',
+            'vue-template-compiler'
+        ], {'save-dev': true});
     }
 
     install() {

@@ -1,0 +1,22 @@
+<%_ if (sass) { _%>
+@import "./variables";
+<%_ } _%>
+
+html, body, #root {
+  height: 100%;
+}
+
+
+body {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+

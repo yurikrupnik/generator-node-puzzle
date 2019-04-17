@@ -5,7 +5,7 @@ module.exports = class ServicesGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
-        this.option('path', {
+        this.option('destinationPath', {
             type: String,
             required: false,
             desc: 'Destination path of a files',

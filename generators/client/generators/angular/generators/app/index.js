@@ -55,16 +55,12 @@ module.exports = class VueGenerator extends Generator {
     }
 
     configuring() {
-        // this.config.set({
-        //     // extensions: '.vue',
-        //     angular: true
-        // });
         this.composeWith(require.resolve('../../../../../webpack/app'), {
             type: this.options.type,
             angular: true,
             sass: this.options.sass,
             destinationPath: this.options.destinationPath,
-            loadable: this.options.loadable
+            // loadable: this.options.loadable
         });
     }
 
@@ -80,6 +76,10 @@ module.exports = class VueGenerator extends Generator {
         this.npmInstall([
             'angular'
         ]);
+
+        this.npmInstall([
+            'html-loader'
+        ], { 'save-dev': true });
     }
 
     install() {

@@ -76,13 +76,6 @@ module.exports = class Webpack extends Generator {
             default: 5000
         });
 
-        this.option('loadable', {
-            type: Boolean,
-            required: false,
-            desc: 'Include webpack',
-            default: false
-        });
-
         this.option('ssr', {
             type: Boolean,
             required: false,
@@ -94,21 +87,21 @@ module.exports = class Webpack extends Generator {
     default() {
         const {
             destinationPath,
-            loadable,
             react
         } = this.options;
+
         // this.composeWith(require.resolve('generator-license'));
 
-        this.composeWith(require.resolve('../../babel/app'), {
-            react,
-            loadable
+        this.composeWith(require.resolve('generator-eslinter'), {
+            configs: react ? 'airbnb' : 'airbnb-base',
+            plugins: react ? 'react-hooks' : '',
+            personal: react
+        });
+        this.composeWith(require.resolve('generator-babelrc'), {
+            react
         });
         this.composeWith(require.resolve('../../assets/app'), {
             destinationPath: `${destinationPath}/assets`
-        });
-
-        this.composeWith(require.resolve('../../eslint/app'), {
-            react
         });
     }
 
@@ -179,7 +172,7 @@ module.exports = class Webpack extends Generator {
 
         const scriptServer = {
             start: 'webpack -w',
-            'start:mongo': 'docker run --rm -d -p 27017:27017 --name mongo mongos',
+            'start:mongo': 'docker run --rm -d -p 27017:27017 --name mongo mongo',
             build: 'run-s clean webpack --env.prod',
             'clean': 'rimraf dist/',
         };
@@ -191,11 +184,11 @@ module.exports = class Webpack extends Generator {
         };
 
         const scriptsFullstack = {
-            start: 'run-p start:client start:server',
-            'start:client': 'webpack --c webpack.config.client.js',
-            'start:server': 'webpack -w --c webpack.config.server.js',
+            start: 'npm-run-all -p start:client start:server',
+            'start:client': 'webpack-dev-server --config webpack.config.client.js',
+            'start:server': 'webpack -w --config webpack.config.server.js',
             'start:mongo': 'docker run --rm -d -p 27017:27017 --name mongo mongo',
-            'build': 'npm-run-all run-p build:server build:client',
+            'build': 'npm run clean && npm-run-all -p build:server build:client',
             'build:client': 'webpack --env.prod --config webpack.config.client.js',
             'build:server': 'webpack --env.prod --config webpack.config.server.js',
             'clean': 'rimraf dist/',
@@ -242,6 +235,7 @@ module.exports = class Webpack extends Generator {
             'webpack-cli',
             'webpack-bundle-analyzer',
             'npm-run-all',
+            'babel-loader',
             'file-loader',
             'eslint-loader',
             'dotenv'
@@ -259,7 +253,6 @@ module.exports = class Webpack extends Generator {
                 'css-loader',
                 'html-webpack-plugin',
                 'terser-webpack-plugin',
-                'identity-obj-proxy',
                 'mini-css-extract-plugin',
                 'optimize-css-assets-webpack-plugin',
                 'style-loader',

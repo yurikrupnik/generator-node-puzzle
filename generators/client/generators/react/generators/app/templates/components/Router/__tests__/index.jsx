@@ -1,10 +1,11 @@
 import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import { MemoryRouter } from 'react-router-dom';
 import Router from '../index';
 
 const {
     it,
-    expect,
-    shallow
+    afterEach
 } = global;
 
 const Component = () => (
@@ -12,6 +13,7 @@ const Component = () => (
         asd
     </div>
 );
+afterEach(cleanup);
 
 it('should render Router', () => {
     const routes = [
@@ -21,12 +23,13 @@ it('should render Router', () => {
             key: '1'
         }
     ];
-    const wrapper = shallow(
-        <Router routes={routes}>
-            <h2>
-                s
-            </h2>
-        </Router>
+    render(
+        <MemoryRouter>
+            <Router routes={routes}>
+                <h2>
+                    s
+                </h2>
+            </Router>
+        </MemoryRouter>
     );
-    expect(wrapper).toMatchSnapshot();
 });

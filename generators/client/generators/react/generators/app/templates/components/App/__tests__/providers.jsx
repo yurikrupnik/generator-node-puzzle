@@ -1,7 +1,8 @@
-import { render, cleanup } from 'react-testing-library';
 import React from 'react';
+import { render, cleanup } from 'react-testing-library';
 import Providers from '../providers';
-import providers from '../../../api/providers';
+
+const providers = [];
 
 const {
     describe,

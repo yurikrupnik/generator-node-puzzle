@@ -4,14 +4,17 @@
     <title><%%- title %></title>
 </head>
 <body>
-<%_ if(ssr) { _%>
+<%_ if(ssr && !angular) { _%>
 <script>
     window.appData = <%%= JSON.stringify(appData) %>
 </script>
 <div id="root"><%%- html %></div>
 <%_ } _%>
- <%_ if(!ssr) { _%>
+<%_ if(!ssr && !angular) { _%>
     <div id="root"></div>
+<%_ } _%>
+<%_ if(angular) { _%>
+    <main></main>
 <%_ } _%>
 </body>
 </html>

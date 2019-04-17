@@ -64,46 +64,148 @@ module.exports = class ExpressGenerator extends Generator {
         });
     }
 
+    async prompting() {
+        this.props = await this.prompt([
+            {
+                type: 'confirm',
+                name: 'db',
+                message: 'Would you like to use MongoDB?',
+            },
+            {
+                type: 'confirm',
+                name: 'auth',
+                message: 'Would you scaffold out an authentication boilerplate?',
+                when: answers => answers.db
+            },
+            {
+                type: 'confirm',
+                name: 'io',
+                message: 'Would you like to use SocketIO?',
+                default: true
+            }
+        ]);
+    }
+
     configuring() {
         this.composeWith(require.resolve('../../../../../webpack/app'), {
-            type: 'server',
+            type: this.options.type,
             sass: this.options.sass,
             ssr: this.options.ssr,
             destinationPath: this.options.destinationPath,
             // loadable: this.options.loadable
         });
-        // this._buildCodeSrcFolder();
-        // this.config.set({
-        //     //     src: this.options.codeSrc,
-        //     componentDestination: this.options.codeSrc + 'components',
-        //     // apiDestination: this.options.codeSrc + 'api'
-        // });
     }
 
     writing() {
-        const { destinationPath, port, db, auth, io, oauth } = this.options;
-        // console.log('oauth', oauth);
+        const { destinationPath, port, ssr, type } = this.options;
+        const { db, auth, io } = this.props;
 
+        if (db) {
+            this.fs.copy(
+                this.templatePath('services/db'),
+                this.destinationPath(`${destinationPath}/services/db`),
+            );
+
+            this.fs.copy(
+                this.templatePath('api/projects'),
+                this.destinationPath(`${destinationPath}/api/projects`),
+            );
+
+            this.fs.copy(
+                this.templatePath('api/users'),
+                this.destinationPath(`${destinationPath}/api/users`),
+            );
+
+            this.fs.copyTpl(
+                this.templatePath('api/index.js'),
+                this.destinationPath(`${destinationPath}/api/index.js`),
+                { db, auth }
+            );
+
+            this.fs.copy(
+                this.templatePath('api/methods.js'),
+                this.destinationPath(`${destinationPath}/api/methods.js`),
+            );
+        } else {
+            this.fs.copy(
+                this.templatePath('api/pure'),
+                this.destinationPath(`${destinationPath}/api/users`),
+            );
+        }
+
+        if (io) {
+            this.fs.copy(
+                this.templatePath('services/socket'),
+                this.destinationPath(`${destinationPath}/services/socket`),
+            );
+        }
+
+        if (auth) {
+            this.fs.copy(
+                this.templatePath('services/passport'),
+                this.destinationPath(`${destinationPath}/services/passport`),
+            );
+
+            this.fs.copy(
+                this.templatePath('api/auth'),
+                this.destinationPath(`${destinationPath}/api/auth`),
+            );
+        }
+
+        if (ssr) {
+            this.fs.copy(
+                this.templatePath('services/render'),
+                this.destinationPath(`${destinationPath}/services/render`),
+            );
+        }
+
+        const { promptValues } = this.config.getAll();
+        const extension = promptValues && promptValues.viewEngine === 'react' ? 'jsx' : 'js';
         this.fs.copyTpl(
-            this.templatePath(),
-            this.destinationPath(destinationPath),
+            this.templatePath('index.js'),
+            this.destinationPath(`${destinationPath}/${type === 'fullstack' ? 'server': 'index'}.${extension}`),
             {
                 port,
                 db,
-                // path: 'd',
                 io,
                 auth,
-                oauth
+                ssr
             }
         );
     }
 
     install() {
-        // console.log('App this.config.getAll()', this.config.getAll());
-
+        const { db, auth, io } = this.props;
         this.npmInstall([
             'express',
             'morgan'
         ]);
+
+        if (db) {
+            this.npmInstall([
+                'connect-mongo',
+                'express-session',
+                'mongoose'
+            ]);
+        }
+
+        if (auth) {
+            this.npmInstall([
+                'bcrypt',
+                'faker',
+                'passport',
+                'passport-local',
+                'passport-facebook',
+                'shortid'
+            ]);
+        }
+
+        if (io) {
+            this.npmInstall([
+                'socket.io',
+                'socket.io-client'
+            ]);
+        }
     }
+
 };

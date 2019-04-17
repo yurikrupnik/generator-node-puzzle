@@ -13,7 +13,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 module.exports = env => {
     const isProd = env ? !!env.prod : false;
     const isDebug = env ? !!env.debug : false;
-    const config = isProd ? dotenv.config() : require('./<%= destinationPath %>/config'); // eslint-disable-line global-require
+    const config = isProd ? dotenv.config() : require('./<%= destinationPath %>/config'); // eslint-disable-line
 
     return {
         context: path.resolve(__dirname, '<%= destinationPath %>'),
@@ -28,17 +28,20 @@ module.exports = env => {
             extensions: [
                 '.json',
                 '.js',
+                <%_ if(vue) { _%>
+                '.vue',
+                <%_ } _%>
                 <%_ if(react) { _%>
                 '.jsx',
                 <%_ } _%>
-                '.css' <%_ if(sass) { _%>,
+                '.css'<% if(sass) { %>,
                 '.scss'
                 <%_ } _%>
-            ] <%_ if(vue) { _%>,
+            ] <% if(vue) { %>,
             alias: {
                 vue: 'vue/dist/vue.js'
             }
-            <%_ } %>
+            <% } %>
         },
         devtool: isProd ? 'source-map' : 'eval-cheap-module-source-map',
         entry: './<%= isFullstack ? 'client' : 'index' _%>.<%= react ? 'jsx' : 'js' _%>',
@@ -114,7 +117,7 @@ module.exports = env => {
             }),
             new HtmlWebpackPlugin({
                 template: 'index.ejs',
-                filename: 'index.<%= isFullstack ? 'esj' : 'html' _%>',
+                filename: 'index.<%= isFullstack ? 'ejs' : 'html' _%>',
                 favicon: 'assets/favicon.ico',
                 meta: {
                     charset: 'UTF-8',

@@ -91,5 +91,25 @@ module.exports = class ClientGenerator extends Generator {
                 type
             });
         }
+
+        this._handleStyles();
+    }
+
+    _handleStyles() {
+        const {sass} = this.props;
+        const {destinationPath} = this.options;
+        if (sass) {
+            this.fs.copyTpl(
+                this.templatePath('styles'),
+                this.destinationPath(`${destinationPath}/styles`),
+                { sass }
+            );
+        } else {
+            this.fs.copyTpl(
+                this.templatePath('styles/_reset.scss'),
+                this.destinationPath(`${destinationPath}/styles/index.css`),
+                { sass }
+            );
+        }
     }
 };
